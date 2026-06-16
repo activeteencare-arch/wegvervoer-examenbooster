@@ -147,10 +147,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .lsec .lkop{font-family:'Outfit',sans-serif;font-size:15.5px;font-weight:600;color:var(--text);display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;line-height:1.35}
 .lsec .lkop .dot{color:var(--gold);font-size:8px;margin-top:7px;flex:none}
 .lsec .ltxt{font-size:14px;color:var(--muted);line-height:1.65}
-/* coach-knop onder het theorieblok (conversatiecoach, geen aparte voorlezer) */
-.blokcoachbtn{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--gold);border:1px solid var(--border);border-radius:30px;padding:11px 18px;margin:4px 0 6px;transition:.15s}
-.blokcoachbtn:hover{border-color:var(--gold);background:rgba(212,165,32,.08)}
-.blokcoachbtn i{font-size:16px}
+/* voorleesknop onder elke theorie-sectie (worker-TTS, Michiels stem) */
+.tools{display:flex;gap:8px;margin-top:12px}
+.tbtn{display:inline-flex;align-items:center;gap:7px;font-family:'Outfit',sans-serif;font-size:12.5px;font-weight:500;color:var(--gold);border:1px solid var(--border);border-radius:30px;padding:8px 14px;transition:.15s}
+.tbtn:hover{border-color:var(--gold);background:rgba(212,165,32,.08)}
+.tbtn.loading{opacity:.55;pointer-events:none}
+.tbtn i{font-size:15px}
 .leerprogress{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim);margin:0 2px 14px}
 .leerprogress .pill{font-family:'Outfit';font-size:11px;letter-spacing:.5px;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
 .fade{animation:f .25s ease}
@@ -237,10 +239,32 @@ function shuffleOpts(q){
   });
 }
 
+/* ====== audio (worker-TTS, Michiels stem; zelfde patroon als de CBR-theorie) ====== */
+const WORKER = "https://tts-proxy.activeteencare.workers.dev";
+let audio=null, audioBtn=null;
+async function speak(text,btn){
+  if(audio){ audio.pause(); audio=null; const prev=audioBtn; audioBtn=null; if(prev) prev.innerHTML=prev._orig; if(prev===btn) return; }
+  audioBtn=btn;
+  if(btn){ btn._orig=btn._orig||btn.innerHTML; btn.innerHTML='<i class="ti ti-loader-2"></i> Laden...'; }
+  try{
+    const r=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.slice(0,1490)})});
+    if(!r.ok) throw 0;
+    const b=await r.blob();
+    audio=new Audio(URL.createObjectURL(b));
+    audio.onended=()=>{ audio=null; if(audioBtn){ audioBtn.innerHTML=audioBtn._orig; audioBtn=null; } };
+    await audio.play();
+    if(btn) btn.innerHTML='<i class="ti ti-player-stop"></i> Stop';
+  }catch(e){ if(btn) btn.innerHTML=btn._orig; audioBtn=null; }
+}
+function stopAudio(){ if(audio){audio.pause();audio=null} if(audioBtn){ audioBtn.innerHTML=audioBtn._orig; audioBtn=null; } }
+/* leest een theorie-sectie voor: kop + tekst */
+function leesSectie(kop, tekst, btn){ speak(`${kop}. ${tekst}`, btn); }
+
 /* ====== navigatie ====== */
 function render(){
   const f=stack[stack.length-1];
   backBtn.style.display = stack.length>1?'flex':'none';
+  stopAudio();
   if(coachConv) stopCoach();
   if(window.EX && EX._iv && f!==examResult){ clearInterval(EX._iv); }
   app.className=''; void app.offsetWidth; app.classList.add('fade');
@@ -408,29 +432,8 @@ function lsecHtml(ls){
   return (ls.secties||[]).map(s=>`<div class="lsec">
      <div class="lkop"><i class="ti ti-point-filled dot"></i><span>${esc(s.kop)}</span></div>
      <div class="ltxt">${esc(s.tekst)}</div>
+     <div class="tools"><button class="tbtn" onclick="leesSectie(${JSON.stringify(s.kop).replace(/"/g,'&quot;')}, ${JSON.stringify(s.tekst).replace(/"/g,'&quot;')}, this)"><i class="ti ti-volume"></i> Lees voor</button></div>
    </div>`).join('');
-}
-/* coach-knop onder een theorieblok: start de bestaande conversatiecoach met de
-   blok-titel en de sectieteksten als opening. De coach leest het blok voor, legt
-   het uit en de cursist kan hardop doorvragen. Geen aparte tts-proxy meer. */
-function blokCoachBtnHtml(ls){
-  if(!COACH_ENABLED) return '';
-  const secties = (ls.secties||[]).map(s=>`${s.kop}. ${s.tekst}`).join(' ');
-  const opening = `We nemen het blok ${ls.titel} samen door. ${secties} Zal ik iets verder uitleggen, of heb je hier een vraag over?`;
-  return `<button class="blokcoachbtn" onclick="blokCoach(this, ${JSON.stringify(opening).replace(/"/g,'&quot;')})"><i class="ti ti-microphone"></i> Laat je coach dit uitleggen</button>`;
-}
-function blokCoach(btn, opening){
-  if(!COACH_ENABLED) return;
-  if(coachConv){ stopCoach(); blokCoachUI(btn,'stopped'); return; }
-  startCoach(opening, (state)=>blokCoachUI(btn, state));
-}
-function blokCoachUI(btn, state){
-  if(!btn || !btn.isConnected) return;
-  const active=(state==='listening'||state==='speaking'||state==='connecting');
-  const m={ connecting:['Verbinden...','ti-loader-2'], listening:['Stop de uitleg','ti-player-stop'], speaking:['Stop de uitleg','ti-player-stop'], error:['Mislukt, tik opnieuw','ti-microphone'], stopped:['Laat je coach dit uitleggen','ti-microphone'] };
-  const [txt,ic]=m[state]||['Laat je coach dit uitleggen','ti-microphone'];
-  btn.innerHTML=`<i class="ti ${ic}"></i> ${txt}`;
-  btn.style.borderColor=active?'var(--good)':''; btn.style.color=active?'var(--good)':'';
 }
 /* leer-scherm vóór een oefenblok: lezen, dan starten */
 function blokLeren(key){
@@ -439,7 +442,6 @@ function blokLeren(key){
    <div class="chap-head"><div class="n">${String(BLOKKEN_DEF.indexOf(b)+1).padStart(2,'0')}</div><h2>${esc(ls.titel)}</h2></div>
    <p class="leadin">${esc(ls.intro)}</p>
    ${lsecHtml(ls)}
-   ${blokCoachBtnHtml(ls)}
    <button class="pbtn" style="margin-top:6px" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Start de oefenvragen (${lijst.length})</button>
    <button class="pbtn ghost" style="margin-top:10px" onclick="goBack()">Terug</button>`;
 }
@@ -469,7 +471,6 @@ function blokLezen(key){
    <div class="chap-head"><div class="n">${String(BLOKKEN_DEF.indexOf(b)+1).padStart(2,'0')}</div><h2>${esc(ls.titel)}</h2></div>
    <p class="leadin">${esc(ls.intro)}</p>
    ${lsecHtml(ls)}
-   ${blokCoachBtnHtml(ls)}
    <button class="pbtn" style="margin-top:6px" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Oefen dit blok (${lijst.length} vragen)</button>
    <button class="pbtn ghost" style="margin-top:10px" onclick="goBack()">Terug naar de blokken</button>`;
 }
