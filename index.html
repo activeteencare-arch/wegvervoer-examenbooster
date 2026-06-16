@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weekend Exam Booster - Wegvervoer 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.26.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#1c2636; --card:#1f2d42; --card2:#23344c;
+  --blue:#1a8cff; --gold:#d4a520; --gold2:#e8bf45;
+  --text:#eef1f5; --muted:#c2cdd8; --dim:#7f8da0;
+  --border:#47586e; --bad:#e84040; --good:#46b48a;
+  --r:0.75rem; --r-lg:1rem;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;justify-content:center}
+#shell{width:100%;max-width:560px;min-height:100vh;background:var(--bg);position:relative;display:flex;flex-direction:column;padding:0 18px 90px}
+h1,h2,h3,.font-d{font-family:'Outfit',sans-serif;font-weight:600}
+.label{font-family:'Outfit',sans-serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.muted{color:var(--muted)} .dim{color:var(--dim)}
+a{color:var(--blue);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* top bar */
+.topbar{display:flex;align-items:center;gap:12px;padding:20px 2px 16px;position:sticky;top:0;background:linear-gradient(var(--bg) 80%,transparent);z-index:20}
+.topbar .mark{width:40px;height:40px;flex:none}
+.topbar .wm{font-family:'Outfit';font-weight:700;font-size:20px;letter-spacing:.3px}
+.topbar .wm b{color:var(--gold);font-weight:700}
+.topbar .sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:1px}
+.back{margin-left:auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;transition:.15s}
+.back:hover{border-color:var(--gold);color:var(--gold)}
+
+/* header art */
+.headerart{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin:4px 0 18px;background:var(--card)}
+.headerart svg{display:block;width:100%;height:auto}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:.15s}
+.row{display:flex;align-items:center;gap:13px;padding:15px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);width:100%;text-align:left;transition:.15s;margin-bottom:10px}
+.row:hover{border-color:var(--gold);background:var(--card2)}
+.row .idx{font-family:'Outfit';color:var(--gold);font-size:15px;font-weight:600;width:30px;flex:none}
+.row .ttl{flex:1;font-size:14.5px}
+.row .meta{font-size:12px;color:var(--dim)}
+.row .chev{color:var(--dim);font-size:18px}
+.row .done{color:var(--good);font-size:18px}
+
+/* hero */
+.hero{display:flex;align-items:center;gap:18px;margin:0 0 18px;padding:20px;border:1px solid var(--border);border-radius:var(--r-lg);background:var(--card)}
+.ring{width:78px;height:78px;flex:none}
+.hero .h-t{font-family:'Outfit';font-size:20px;font-weight:600;line-height:1.25;margin-bottom:5px}
+.hero .h-s{font-size:13px;color:var(--muted)}
+
+.routebox{display:flex;gap:8px;margin:0 0 16px}
+.routebox .step{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 10px;text-align:center}
+.routebox .step .d{font-family:'Outfit';font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:5px}
+.routebox .step .w{font-size:12.5px;line-height:1.4;color:var(--text)}
+.routebox .step.mid{border-color:var(--gold)}
+
+.infonote{background:rgba(26,140,255,.10);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.55;color:var(--text)}
+.formatbar{display:flex;gap:8px;margin:0 0 18px}
+.formatbar .fb-item{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px 10px;text-align:center}
+.formatbar .fb-item .n{font-family:'Outfit';font-size:22px;font-weight:700;color:var(--gold);line-height:1}
+.formatbar .fb-item .l{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.3}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 16px 16px;text-align:left;transition:.15s;display:flex;flex-direction:column;gap:10px;min-height:120px}
+.tile:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tile .ic{font-size:24px;color:var(--gold)}
+.tile .tl{font-family:'Outfit';font-size:16px;font-weight:600}
+.tile .ts{font-size:12px;color:var(--muted);line-height:1.45}
+.tile.wide{grid-column:1/3}
+.tile .badge{display:inline-block;font-size:10px;letter-spacing:.04em;color:var(--good);border:1px solid rgba(70,180,138,.4);border-radius:6px;padding:2px 7px;margin-top:auto;align-self:flex-start}
+
+/* section header */
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;margin:8px 2px 14px}
+.sec-title .cnt{font-size:12px;color:var(--dim)}
+.chap-head{margin:4px 0 16px}
+.chap-head .n{font-family:'Outfit';font-size:38px;font-weight:300;color:var(--gold);line-height:1}
+.chap-head h2{font-size:21px;margin-top:6px}
+.chap-head .desc{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+/* quiz */
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px;font-size:12.5px;color:var(--muted)}
+.qbar{height:5px;background:var(--card2);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.qbar i{display:block;height:100%;background:var(--gold);transition:.3s;width:0}
+.q-txt{font-family:'Outfit';font-size:18px;font-weight:500;line-height:1.4;margin-bottom:20px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px 16px;margin-bottom:11px;font-size:14.5px;transition:.13s;line-height:1.45}
+.opt:hover{border-color:var(--blue)}
+.opt .ltr{display:inline-flex;width:24px;height:24px;border-radius:6px;background:var(--card2);color:var(--gold);font-family:'Outfit';font-weight:600;font-size:13px;align-items:center;justify-content:center;margin-right:11px;flex:none}
+.opt.good{border-color:var(--good);background:rgba(70,180,138,.12)}
+.opt.good .ltr{background:var(--good);color:#0c1a14}
+.opt.bad{border-color:var(--bad);background:rgba(232,64,64,.12)}
+.opt.bad .ltr{background:var(--bad);color:#fff}
+.opt.dimmed{opacity:.5}
+.opt.locked{cursor:default}
+.timer{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:600}
+.timer.warn{color:var(--bad)}
+.qtype{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:2px 8px;margin-bottom:12px}
+.fb{border-radius:var(--r);padding:14px 15px;margin:6px 0 16px;font-size:13.5px;line-height:1.6;border:1px solid var(--border)}
+.fb.ok{border-color:rgba(70,180,138,.4);background:rgba(70,180,138,.07)}
+.fb.no{border-color:rgba(232,64,64,.4);background:rgba(232,64,64,.07)}
+.fb .h{font-family:'Outfit';font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.fb.ok .h{color:var(--good)} .fb.no .h{color:var(--bad)}
+.fb .sub-h{font-family:'Outfit';font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);margin:11px 0 4px;display:flex;align-items:center;gap:6px}
+.fb .mistake .sub-h{color:var(--bad)}
+
+/* primary button */
+.pbtn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:var(--gold);color:#1a1407;font-family:'Outfit';font-weight:600;font-size:15px;border-radius:var(--r);padding:15px;transition:.15s;margin-top:6px}
+.pbtn:hover{background:var(--gold2)}
+.pbtn.blue{background:var(--blue);color:#fff}
+.pbtn.blue:hover{filter:brightness(1.1)}
+.pbtn.ghost{background:transparent;color:var(--gold);border:1px solid var(--border)}
+.pbtn.ghost:hover{border-color:var(--gold);background:rgba(212,165,32,.07)}
+
+/* exam result */
+.score{text-align:center;padding:26px 0 18px}
+.score .big{font-family:'Outfit';font-size:56px;font-weight:300;line-height:1}
+.score .big b{font-weight:700;color:var(--gold)}
+.score .verdict{font-family:'Outfit';font-size:21px;font-weight:600;margin-top:10px}
+.score .verdict.pass{color:var(--good)} .score .verdict.fail{color:var(--bad)}
+.score .sub{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.55}
+.blokrow{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;background:var(--card)}
+.blokrow .bn{flex:1;font-size:14px}
+.blokrow .bs{font-family:'Outfit';font-weight:600;font-size:14px}
+.blokrow .barwrap{width:90px;height:6px;background:var(--card2);border-radius:3px;overflow:hidden;flex:none}
+.blokrow .barwrap i{display:block;height:100%;border-radius:3px}
+.advies{background:rgba(212,165,32,.07);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;font-size:13.5px;line-height:1.6}
+.advies b{color:var(--text)}
+
+/* coach */
+.coach-card{padding:24px 20px;text-align:center}
+.coach-card .av{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--gold);font-size:28px;background:none;transition:.15s}
+.coach-card h2{font-size:19px;margin-bottom:8px}
+.coach-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:6px}
+.coachbtn{display:inline-flex;align-items:center;gap:7px;font-family:'Outfit';font-size:12.5px;font-weight:600;color:var(--gold);border:1px solid var(--border);border-radius:30px;padding:9px 15px;transition:.15s;margin:6px 0 2px}
+.coachbtn:hover{border-color:var(--gold);background:rgba(212,165,32,.08)}
+.coachbtn.off{opacity:.55}
+
+.fade{animation:f .25s ease}
+@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.center-note{text-align:center;color:var(--muted);font-size:13px;padding:30px 0;line-height:1.6}
+.pilltag{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-family:'Outfit';font-weight:600}
+.disc{background:rgba(232,64,64,.06);border:1px solid rgba(232,64,64,.3);border-radius:var(--r);padding:11px 13px;font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:13px}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div class="topbar">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="4" y="26" width="36" height="20" rx="3" fill="none" stroke="#1a8cff" stroke-width="3"/>
+      <path d="M40 30h11l7 9v7H40z" fill="none" stroke="#d4a520" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="18" cy="48" r="5" fill="none" stroke="#eef1f5" stroke-width="3"/>
+      <circle cx="46" cy="48" r="5" fill="none" stroke="#eef1f5" stroke-width="3"/>
+    </svg>
+    <div>
+      <div class="wm">SkillOps<b>AI</b></div>
+      <div class="sub">Weekend Exam Booster</div>
+    </div>
+    <button class="back" id="backBtn" aria-label="terug" style="display:none" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ====== CONTENT (geinjecteerd door build.py) ====== */
+const CONTENT = {"examen": {"naam": "Weekend Exam Booster: Wegvervoer Goederen Deel 1", "format": "30 vragen / 60 min / min. 20 goed", "richting": "CBR-getuigschrift vakbekwaamheid, op weg naar NIWO-eurovergunning", "peildatum": "juni 2026", "feitenbasis": "BRON-Wegvervoer1-lesmateriaal-Chris.md (scope) + VERIFICATIE-Wegvervoer1-inhoud.md (geverifieerde actuele waarden, incl. aanvullende CEMT/tachograaf-sectie 16-06-2026)"}, "startcheck": [{"id": "SC01", "blok": "blok1_organisaties", "vraag": "Welke organisatie verleent in Nederland de eurovergunning voor het beroepsgoederenvervoer over de weg?", "opties": {"A": "NIWO", "B": "KIWA Register", "C": "RDW", "D": "CBR"}, "juist": "A", "uitleg": "De NIWO verleent, verlengt en trekt de eurovergunning en vergunningsbewijzen in. KIWA Register doet de vergunningen voor personenvervoer en taxi, de RDW gaat over voertuigregistratie en kentekens, en het CBR neemt de vakbekwaamheidsexamens af. Alleen de NIWO is de vergunningverlener voor goederenvervoer.", "examentip": "Onthoud de koppeling NIWO = goederenvervoer, KIWA = personenvervoer en taxi. Dat onderscheid wordt vaak getoetst.", "veelgemaakte_fout": "KIWA aanwijzen omdat het ook een vergunningverlener is, maar dan voor personenvervoer en niet voor goederen.", "bron": "NIWO productpagina vergunning wegvervoer; VERIFICATIE Blok 1 (KIWA-nuance) en BRON Blok 1"}, {"id": "SC02", "blok": "blok2_begrippen_overeenkomst", "vraag": "Wat is de maximale aansprakelijkheid van de vervoerder bij binnenlands wegvervoer onder de AVC 2002?", "opties": {"A": "8,33 SDR per kilogram", "B": "Maximaal 3,40 euro per kilogram", "C": "Onbeperkt", "D": "Maximaal 9,00 euro per kilogram"}, "juist": "B", "uitleg": "Onder de AVC 2002 is de vervoerder bij binnenlands wegvervoer aansprakelijk tot maximaal 3,40 euro per kilogram. De 8,33 SDR per kilogram hoort bij het internationale CMR-verdrag, niet bij de AVC. De aansprakelijkheid is dus juist wel begrensd en het bedrag van 9,00 euro bestaat niet als norm.", "examentip": "Koppel het bedrag aan het toepassingsgebied: 3,40 euro per kg is binnenland (AVC), 8,33 SDR per kg is internationaal (CMR).", "veelgemaakte_fout": "De CMR-norm (8,33 SDR per kg) toepassen op een binnenlandse rit.", "bron": "AVC 2002, art. aansprakelijkheid; VERIFICATIE Blok 2 (AVC 3,40/kg)"}, {"id": "SC03", "blok": "blok3_rij_en_rusttijden", "vraag": "Hoeveel uur mag een bestuurder volgens Verordening (EG) 561/2006 normaal gesproken maximaal per dag rijden?", "opties": {"A": "8 uur", "B": "10 uur", "C": "9 uur", "D": "11 uur"}, "juist": "C", "uitleg": "De normale dagelijkse rijtijd is maximaal 9 uur. Tweemaal per week mag deze worden verlengd tot 10 uur, maar dat is de uitzondering, niet de regel. De gevraagde normale maximumdagrijtijd is dus 9 uur.", "examentip": "Let op het woord normaal of normaliter in de vraag. Het standaardgetal is 9 uur, de 10 uur is de tweemaal-per-week-uitzondering.", "veelgemaakte_fout": "Direct 10 uur invullen omdat dat getal bekend is, terwijl naar de normale dagrijtijd wordt gevraagd.", "bron": "EU 561/2006 (dagelijkse rijtijd); VERIFICATIE Blok 3 (KLOPT)"}, {"id": "SC04", "blok": "blok4_cemt_grenzen", "vraag": "Bij hoeveel landen is de CEMT-vergunning volgens de actuele NIWO-lijn voor 2026 te gebruiken?", "opties": {"A": "27 landen", "B": "43 landen", "C": "50 landen", "D": "44 landen"}, "juist": "D", "uitleg": "De NIWO noemt voor 2026 expliciet 44 aangesloten landen. Het getal 27 is het aantal EU-lidstaten, niet CEMT-landen. Het getal 43 komt voor in oudere of ITF-bronnen, maar de actuele NIWO-lijn telt 44 namen. Het verschil komt doordat IJsland wel is aangesloten maar alleen meedoet met de CEMT-verhuisvergunning.", "examentip": "Houd voor het examen het NIWO-getal 44 aan. Verwar het niet met de 27 EU-lidstaten.", "veelgemaakte_fout": "27 invullen door CEMT te verwarren met de Europese Unie.", "bron": "NIWO CEMT-pagina en FAQ (44 landen); VERIFICATIE aanvullende sectie punt 4"}, {"id": "SC05", "blok": "blok2_begrippen_overeenkomst", "vraag": "In hoeveel originele exemplaren wordt de CMR-vrachtbrief opgemaakt?", "opties": {"A": "3 originelen", "B": "2 originelen", "C": "1 origineel", "D": "4 originelen"}, "juist": "A", "uitleg": "De CMR-vrachtbrief wordt opgemaakt in drie originele exemplaren: een voor de afzender, een die met de goederen meereist voor de geadresseerde, en een die de vervoerder houdt. De vrachtbrief geldt als bewijs van de vervoersovereenkomst. Een, twee of vier exemplaren is niet het verdragsmatige aantal.", "examentip": "Onthoud: drie originelen, drie betrokken partijen rond de zending.", "veelgemaakte_fout": "Twee exemplaren kiezen, alsof het alleen om afzender en vervoerder gaat, en de begeleidende kopie vergeten.", "bron": "CMR-verdrag (drie originelen, bewijsfunctie); VERIFICATIE Blok 2"}, {"id": "SC06", "blok": "blok3_rij_en_rusttijden", "vraag": "Na hoeveel uur rijden moet een bestuurder volgens Verordening (EG) 561/2006 uiterlijk een pauze van 45 minuten nemen?", "opties": {"A": "Na 4 uur", "B": "Na 4,5 uur", "C": "Na 5 uur", "D": "Na 6 uur"}, "juist": "B", "uitleg": "Na uiterlijk 4,5 uur rijden is een pauze van 45 minuten verplicht. Die pauze mag worden gesplitst in eerst 15 en daarna 30 minuten, in die volgorde. De andere getallen komen niet overeen met de verordening.", "examentip": "Onthoud de combinatie 4,5 uur rijden gevolgd door 45 minuten pauze, eventueel als 15 plus 30 in die volgorde.", "veelgemaakte_fout": "De splitvolgorde omdraaien naar 30 plus 15, of denken dat het na 5 uur is.", "bron": "EU 561/2006 (pauze); VERIFICATIE Blok 3 (KLOPT, split 15+30 in die volgorde)"}, {"id": "SC07", "blok": "blok1_organisaties", "vraag": "Wie handhaven specifiek de rij- en rusttijden op de weg?", "opties": {"A": "De NLA (Nederlandse Arbeidsinspectie)", "B": "De RDW en de douane", "C": "De ILT en de politie", "D": "Het CBR en de NIWO"}, "juist": "C", "uitleg": "De rij- en rusttijden op de weg worden gehandhaafd door de ILT en de politie. De NLA (Arbeidsinspectie) ziet vooral toe op de Arbeidstijdenwet en niet op de rij- en rusttijden op de weg. De RDW, douane, CBR en NIWO hebben hierin geen handhavingsrol op de weg.", "examentip": "Bij de vraag wie de rij- en rusttijden op de weg controleert is het antwoord altijd ILT plus politie, niet de NLA, ook al staat die in de bredere handhavingslijst.", "veelgemaakte_fout": "De NLA kiezen omdat die in de algemene handhavingslijst staat, terwijl die niet op de weg de rij- en rusttijden handhaaft.", "bron": "VERIFICATIE Blok 1 (handhaving rij-/rusttijden = ILT+politie; NLA = Arbeidstijdenwet) en afwijkingspunt 4"}, {"id": "SC08", "blok": "blok4_cemt_grenzen", "vraag": "In welke vorm bestaat de CEMT-vergunning sinds 1 januari 2026?", "opties": {"A": "Alleen als plastic pasje", "B": "Uitsluitend op papier", "C": "Zowel digitaal als op papier, naar keuze", "D": "Uitsluitend digitaal"}, "juist": "D", "uitleg": "Met ingang van 1 januari 2026 bestaat de CEMT-vergunning uitsluitend in digitale vorm. De papieren vergunning en het bijbehorende papieren groenbladige logboek zijn afgeschaft; in 2026 is ook het logboek digitaal. De andere vormen bestaan dus niet meer.", "examentip": "Let op de jaargrens 1 januari 2026: vanaf dan is de CEMT volledig digitaal, inclusief het logboek.", "veelgemaakte_fout": "Nog uitgaan van het papieren rittenboekje dat altijd in het voertuig moet liggen, terwijl dat sinds 2026 digitaal is.", "bron": "NIWO CEMT-pagina (digitale CEMT 2026); VERIFICATIE aanvullende sectie punt 2"}, {"id": "SC09", "blok": "blok2_begrippen_overeenkomst", "vraag": "Hoe heet het vervoer waarbij een buitenlandse vervoerder binnenlandse ritten uitvoert binnen een ander land?", "opties": {"A": "Transito", "B": "Grensoverschrijdend vervoer", "C": "Cabotage", "D": "Eigen vervoer"}, "juist": "C", "uitleg": "Cabotage is binnenlands vervoer dat een vervoerder uitvoert in een ander land dan het land van vestiging. Transito is doorvoer door een land zonder te laden of te lossen. Grensoverschrijdend vervoer gaat over de grens heen, en eigen vervoer is vervoer van eigen goederen voor de eigen onderneming.", "examentip": "Cabotage = binnenlandse rit in het buitenland. Transito = er alleen doorheen rijden. Verwar deze twee niet.", "veelgemaakte_fout": "Transito en cabotage door elkaar halen.", "bron": "BRON Blok 2 (begrippen cabotage/transito)"}, {"id": "SC10", "blok": "blok3_rij_en_rusttijden", "vraag": "Wat is de normale wekelijkse rust volgens Verordening (EG) 561/2006?", "opties": {"A": "Minimaal 45 uur", "B": "Minimaal 36 uur", "C": "Minimaal 24 uur", "D": "Minimaal 11 uur"}, "juist": "A", "uitleg": "De normale wekelijkse rust bedraagt minimaal 45 uur. Deze mag worden verkort tot minimaal 24 uur, mits de ingekorte uren als een blok worden gecompenseerd binnen drie weken. De 11 uur hoort bij de dagelijkse rust, niet bij de wekelijkse.", "examentip": "Onthoud het onderscheid: 45 uur normale weekrust, 24 uur verkorte weekrust, 11 uur dagelijkse rust.", "veelgemaakte_fout": "De 24 uur (verkorte weekrust) of de 11 uur (dagrust) verwarren met de normale weekrust van 45 uur.", "bron": "EU 561/2006 (wekelijkse rust); VERIFICATIE Blok 3 (KLOPT)"}], "blokken": {"blok1_organisaties": [{"id": "B1-01", "blok": "blok1_organisaties", "vraag": "Hoeveel CBR-examens moet een ondernemer halen om het getuigschrift van vakbekwaamheid voor het beroepsgoederenvervoer te behalen?", "opties": {"A": "6 examens", "B": "5 examens", "C": "3 examens", "D": "8 examens"}, "juist": "A", "uitleg": "Het getuigschrift van vakbekwaamheid wordt behaald door zes deelexamens bij het CBR te halen, binnen vijf jaar. De andere aantallen komen niet overeen met de examenstructuur.", "examentip": "Onthoud de combinatie zes examens binnen vijf jaar, beide getallen worden getoetst.", "veelgemaakte_fout": "Het getal 5 invullen door verwarring met de vijfjaarstermijn waarbinnen de examens moeten worden gehaald.", "bron": "CBR getuigschrift vakbekwaamheid (6 deelexamens binnen 5 jaar); VERIFICATIE Blok 1"}, {"id": "B1-02", "blok": "blok1_organisaties", "vraag": "Aan welke eis van risicodragend vermogen moet een onderneming voldoen voor het eerste voertuig bij de eurovergunning?", "opties": {"A": "5.000 euro", "B": "9.000 euro", "C": "14.000 euro", "D": "50.000 euro"}, "juist": "B", "uitleg": "Voor het eerste voertuig geldt een risicodragend vermogen van 9.000 euro. Voor elk volgend voertuig komt daar 5.000 euro bij. De 5.000 euro is dus het bedrag per volgend voertuig, niet voor het eerste.", "examentip": "Onthoud: 9.000 euro voor het eerste voertuig, 5.000 euro voor elk volgend voertuig.", "veelgemaakte_fout": "9.000 en 5.000 omdraaien of het bedrag per volgend voertuig op het eerste toepassen.", "bron": "NIWO financiele draagkracht (9.000 eerste, +5.000 per volgend); VERIFICATIE Blok 1"}, {"id": "B1-03", "blok": "blok1_organisaties", "vraag": "Met welke frequentie toetst de NIWO de eurovergunning van een onderneming?", "opties": {"A": "Elk jaar", "B": "Elke 3 jaar", "C": "Elke 5 jaar", "D": "Elke 10 jaar"}, "juist": "C", "uitleg": "De NIWO toetst de eurovergunning elke vijf jaar, bij de vijfjaarlijkse verlenging. De andere termijnen passen niet bij deze periodieke toetsing.", "examentip": "De vijfjaarstermijn komt op meerdere plekken terug: vakbekwaamheid binnen vijf jaar en de vijfjaarlijkse toetsing van de eurovergunning.", "veelgemaakte_fout": "Een jaarlijkse of driejaarlijkse toetsing aannemen.", "bron": "NIWO vijfjaarlijkse verlenging eurovergunning; VERIFICATIE Blok 1"}, {"id": "B1-04", "blok": "blok1_organisaties", "vraag": "Welke organisatie is de vergunningverlener voor het personenvervoer en taxivervoer, en daarmee niet voor het goederenvervoer?", "opties": {"A": "NIWO", "B": "Evofenedex", "C": "ILT", "D": "KIWA Register"}, "juist": "D", "uitleg": "KIWA Register verleent vergunningen voor personenvervoer en taxi. Voor het goederenvervoer is de NIWO de vergunningverlener. De ILT is een inspectiedienst en Evofenedex is een belangenorganisatie voor ondernemers, geen vergunningverlener.", "examentip": "Maak in je hoofd twee kolommen: goederen = NIWO, personen en taxi = KIWA.", "veelgemaakte_fout": "KIWA aan het goederenvervoer koppelen.", "bron": "VERIFICATIE Blok 1 (KIWA = personenvervoer/taxi); BRON Blok 1"}, {"id": "B1-05", "blok": "blok1_organisaties", "vraag": "Wat is het verschil tussen een ambassade en een consulaat?", "opties": {"A": "Een ambassade zit in de hoofdstad, een consulaat is een bijkantoor", "B": "Een ambassade is een bijkantoor, een consulaat zit in de hoofdstad", "C": "Een ambassade verleent vergunningen, een consulaat int belastingen", "D": "Er is geen verschil, beide termen betekenen hetzelfde"}, "juist": "A", "uitleg": "De ambassade is de hoofdvertegenwoordiging van een land en zit in de hoofdstad, terwijl een consulaat een bijkantoor is in een andere stad. Beide kunnen helpen met visa, legalisatie en bijstand bij beslag of calamiteiten. De overige beschrijvingen kloppen niet.", "examentip": "Onthoud: ambassade in de hoofdstad, consulaat als bijkantoor elders.", "veelgemaakte_fout": "De rollen van ambassade en consulaat omdraaien.", "bron": "BRON Blok 1 en VERIFICATIE Blok 1 (ambassade=hoofdstad, consulaat=bijkantoor)"}, {"id": "B1-06", "blok": "blok1_organisaties", "vraag": "Welke van de volgende documenten verstrekt de NIWO?", "opties": {"A": "Het rijbewijs", "B": "De CEMT-vergunning", "C": "Het kentekenbewijs", "D": "Het CBR-getuigschrift"}, "juist": "B", "uitleg": "De NIWO verstrekt onder meer de eurovergunning, ritmachtigingen, termijnmachtigingen, de CEMT-vergunning en het bestuurdersattest goederenvervoer. Het rijbewijs en kentekenbewijs lopen via andere instanties en het getuigschrift wordt door het CBR afgegeven.", "examentip": "Onthoud het rijtje NIWO-producten: eurovergunning, ritmachtiging, termijnmachtiging, CEMT en bestuurdersattest.", "veelgemaakte_fout": "Het CBR-getuigschrift aan de NIWO toeschrijven; dat geeft het CBR af.", "bron": "NIWO productpagina's (CEMT, ritmachtiging, bestuurdersattest); VERIFICATIE Blok 1"}, {"id": "B1-07", "blok": "blok1_organisaties", "vraag": "Welke twee partijen handhaven samen de rij- en rusttijden op de weg?", "opties": {"A": "RDW en Belastingdienst", "B": "NLA en douane", "C": "ILT en politie", "D": "NIWO en CBR"}, "juist": "C", "uitleg": "De rij- en rusttijden op de weg worden gehandhaafd door de ILT en de politie. De NLA ziet toe op de Arbeidstijdenwet en niet op de rij- en rusttijden op de weg. De overige combinaties hebben geen handhavingsrol voor de rij- en rusttijden.", "examentip": "Bij rij- en rusttijden op de weg: altijd ILT plus politie. De NLA hoort bij de Arbeidstijdenwet.", "veelgemaakte_fout": "De NLA aanwijzen omdat die in de brede handhavingslijst voorkomt.", "bron": "VERIFICATIE Blok 1 (ILT+politie) en afwijkingspunt 4"}], "blok2_begrippen_overeenkomst": [{"id": "B2-01", "blok": "blok2_begrippen_overeenkomst", "vraag": "Wat is de maximale aansprakelijkheid van de vervoerder per ontbrekende kilogram brutogewicht onder het internationale CMR-verdrag?", "opties": {"A": "8,33 SDR per kilogram", "B": "3,40 euro per kilogram", "C": "25 SDR per kilogram", "D": "Onbeperkt"}, "juist": "A", "uitleg": "Onder het CMR-verdrag is de vervoerder aansprakelijk tot maximaal 8,33 SDR per ontbrekende kilogram brutogewicht. De 3,40 euro per kilogram hoort bij de binnenlandse AVC 2002. De andere opties komen niet overeen met het verdrag.", "examentip": "Internationaal in SDR (8,33), binnenland in euro (3,40). Let op de eenheid in de vraag.", "veelgemaakte_fout": "De binnenlandse AVC-norm (3,40 euro) toepassen op een internationale rit.", "bron": "CMR-verdrag art. 23; VERIFICATIE Blok 2 (8,33 SDR/kg)"}, {"id": "B2-02", "blok": "blok2_begrippen_overeenkomst", "vraag": "Wat is de verjaringstermijn bij een vordering onder het CMR-verdrag in normale gevallen?", "opties": {"A": "6 maanden", "B": "1 jaar", "C": "3 jaar", "D": "5 jaar"}, "juist": "B", "uitleg": "De verjaringstermijn onder het CMR-verdrag is normaal gesproken een jaar. Alleen bij opzet of bewuste roekeloosheid wordt dat drie jaar. Zes maanden en vijf jaar passen niet bij het verdrag.", "examentip": "Onthoud: een jaar normaal, drie jaar bij opzet of bewuste roekeloosheid.", "veelgemaakte_fout": "Direct drie jaar invullen, terwijl dat alleen bij opzet of bewuste roekeloosheid geldt.", "bron": "CMR-verdrag art. 32; VERIFICATIE Blok 2 (1 jaar, 3 bij opzet)"}, {"id": "B2-03", "blok": "blok2_begrippen_overeenkomst", "vraag": "Binnen welke termijn moet schade volgens de AVC 2002 uiterlijk worden gemeld na aflevering?", "opties": {"A": "Binnen 24 uur", "B": "Binnen 14 dagen", "C": "Binnen 7 dagen", "D": "Binnen 1 maand"}, "juist": "C", "uitleg": "Onder de AVC 2002 moet schade uiterlijk binnen zeven dagen na aflevering worden gemeld. De andere termijnen komen niet overeen met de AVC.", "examentip": "Onthoud het getal zeven dagen voor de schademelding onder de AVC.", "veelgemaakte_fout": "Een termijn van 24 uur of 14 dagen aannemen.", "bron": "AVC 2002 (schademelding 7 dagen); VERIFICATIE Blok 2"}, {"id": "B2-04", "blok": "blok2_begrippen_overeenkomst", "vraag": "Welke verdragsregeling geldt bij internationaal wegvervoer van goederen tussen verdragslanden?", "opties": {"A": "De AVC 2002", "B": "Het ATA-carnet", "C": "De Wet wegvervoer goederen", "D": "Het CMR-verdrag"}, "juist": "D", "uitleg": "Bij internationaal wegvervoer geldt het CMR-verdrag. De AVC 2002 geldt voor binnenlands vervoer, mits overeengekomen. De Wet wegvervoer goederen regelt de toegang tot de markt en het ATA-carnet is een douanedocument voor tijdelijke invoer, geen vervoersovereenkomst.", "examentip": "Internationaal = CMR, binnenland = AVC. Een carnet is een douanedocument, geen overeenkomst.", "veelgemaakte_fout": "De AVC kiezen voor een internationale rit, of een douanedocument verwarren met de vervoersovereenkomst.", "bron": "VERIFICATIE Blok 2 (CMR internationaal, AVC binnenland); BRON Blok 2 en 4"}, {"id": "B2-05", "blok": "blok2_begrippen_overeenkomst", "vraag": "Wat is het verschil tussen beroepsvervoer en eigen vervoer?", "opties": {"A": "Bij beroepsvervoer worden goederen van derden tegen betaling vervoerd, bij eigen vervoer eigen goederen voor de eigen onderneming", "B": "Beroepsvervoer is altijd internationaal, eigen vervoer altijd binnenlands", "C": "Eigen vervoer vereist een eurovergunning, beroepsvervoer niet", "D": "Er is geen juridisch verschil tussen beide"}, "juist": "A", "uitleg": "Bij beroepsvervoer worden goederen van derden tegen betaling vervoerd; bij eigen vervoer vervoert een onderneming haar eigen goederen voor de eigen bedrijfsvoering. Het onderscheid hangt niet af van binnenland of internationaal. De eurovergunning is juist nodig voor beroepsvervoer, niet andersom.", "examentip": "De kern is voor wie en waarom je vervoert: goederen van derden tegen betaling (beroeps) of eigen goederen voor de eigen zaak (eigen vervoer).", "veelgemaakte_fout": "Het verschil koppelen aan binnenland versus buitenland in plaats van aan de aard van de lading en de tegenprestatie.", "bron": "BRON Blok 2 (beroepsvervoer vs eigen vervoer)"}, {"id": "B2-06", "blok": "blok2_begrippen_overeenkomst", "vraag": "Welk document moet zich in elk voertuig bevinden dat onder de eurovergunning rijdt?", "opties": {"A": "De originele eurovergunning", "B": "Het getuigschrift van vakbekwaamheid", "C": "Een gewaarmerkt vergunningsbewijs", "D": "Het kentekenbewijs deel 1"}, "juist": "C", "uitleg": "In elk voertuig dat onder de eurovergunning rijdt moet een gewaarmerkt vergunningsbewijs aanwezig zijn. De originele eurovergunning blijft bij de onderneming. Het getuigschrift hoort bij de vervoersmanager en is geen voertuigdocument, en het kentekenbewijs is een andere verplichting.", "examentip": "Onthoud: de eurovergunning blijft op kantoor, het vergunningsbewijs gaat mee in elk voertuig.", "veelgemaakte_fout": "Denken dat de originele eurovergunning in het voertuig moet liggen.", "bron": "BRON Blok 2 (vergunningsbewijs in elk voertuig)"}], "blok3_rij_en_rusttijden": [{"id": "B3-01", "blok": "blok3_rij_en_rusttijden", "vraag": "Hoeveel uur mag een bestuurder maximaal in twee opeenvolgende weken rijden volgens Verordening (EG) 561/2006?", "opties": {"A": "90 uur", "B": "80 uur", "C": "56 uur", "D": "112 uur"}, "juist": "A", "uitleg": "Over twee opeenvolgende weken mag een bestuurder maximaal 90 uur rijden. Per losse week is de maximale rijtijd 56 uur. De 56 uur slaat dus op een week, niet op twee weken, en de andere getallen passen niet bij de verordening.", "examentip": "Combineer de twee plafonds: 56 uur per week, maar samen niet meer dan 90 uur over twee weken.", "veelgemaakte_fout": "De 56 uur per week verdubbelen tot 112 uur, terwijl het tweewekenplafond 90 uur is.", "bron": "EU 561/2006 (wekelijkse rijtijd 56u, twee weken 90u); VERIFICATIE Blok 3"}, {"id": "B3-02", "blok": "blok3_rij_en_rusttijden", "vraag": "Tot hoeveel uur mag de normale dagelijkse rust van 11 uur worden verkort, en hoe vaak?", "opties": {"A": "Tot 10 uur, onbeperkt", "B": "Tot 9 uur, maximaal 3 keer tussen twee weekrusten", "C": "Tot 8 uur, maximaal 2 keer per week", "D": "Tot 9 uur, onbeperkt"}, "juist": "B", "uitleg": "De normale dagelijkse rust van 11 uur mag worden verkort tot 9 uur, maximaal driemaal tussen twee weekrusten. De rust mag ook worden gesplitst in 3 plus 9 uur. De andere combinaties van duur en frequentie kloppen niet.", "examentip": "Onthoud het paar 9 uur en driemaal. Een verkorte dagrust is dus niet onbeperkt toegestaan.", "veelgemaakte_fout": "Aannemen dat de verkorte dagrust onbeperkt mag, terwijl het maximaal driemaal tussen twee weekrusten is.", "bron": "EU 561/2006 (dagelijkse rust verkort tot 9u, max 3x); VERIFICATIE Blok 3"}, {"id": "B3-03", "blok": "blok3_rij_en_rusttijden", "vraag": "REKENVRAAG. Een bestuurder is op een dag al twee keer eerder die week 10 uur gereden. Vandaag heeft hij na 4,5 uur rijden zijn pauze van 45 minuten genomen. Hoeveel uur mag hij vandaag in totaal nog rijden nadat hij in totaal al 4,5 uur heeft gereden?", "opties": {"A": "Nog 6,5 uur, tot een dagtotaal van 11 uur", "B": "Nog 5,5 uur, tot een dagtotaal van 10 uur", "C": "Nog 4,5 uur, tot een dagtotaal van 9 uur", "D": "Nog 3,5 uur, tot een dagtotaal van 8 uur"}, "juist": "C", "uitleg": "De bestuurder heeft deze week al twee keer 10 uur gereden, dus de twee verlengingen tot 10 uur zijn op. Vandaag geldt daarom de normale dagrijtijd van 9 uur. Hij heeft al 4,5 uur gereden, dus mag hij nog 9 min 4,5 is 4,5 uur rijden. De opties met 10 of 11 uur dagtotaal kunnen niet, omdat de extra uren al gebruikt zijn.", "examentip": "Tel eerst hoeveel keer de 10-uursverlenging deze week al is gebruikt. Bij twee keer val je terug op de normale 9 uur.", "veelgemaakte_fout": "Toch 10 uur als dagmaximum aanhouden, terwijl de twee toegestane verlengingen die week al verbruikt zijn.", "bron": "EU 561/2006 (dagrijtijd 9u, 2x per week 10u); VERIFICATIE Blok 3"}, {"id": "B3-04", "blok": "blok3_rij_en_rusttijden", "vraag": "REKENVRAAG. Een bestuurder verkort deze week zijn wekelijkse rust van 45 uur tot 30 uur. Hoeveel uur moet hij als compensatie inhalen, en binnen welke termijn?", "opties": {"A": "45 uur, in te halen binnen 6 weken", "B": "21 uur, in te halen binnen 1 week", "C": "Geen compensatie, want 30 uur is toegestaan", "D": "15 uur, in te halen als blok binnen 3 weken"}, "juist": "D", "uitleg": "Het verschil tussen de normale weekrust van 45 uur en de genomen 30 uur is 15 uur. Die 15 uur moet als een aaneengesloten blok worden gecompenseerd binnen drie weken, gekoppeld aan een rust van minstens 9 uur. Er is dus wel degelijk compensatie nodig en het verschil bedraagt 15 uur, niet 21 of 45.", "examentip": "Reken het tekort uit als 45 min de genomen weekrust. Dat tekort haal je als blok in binnen drie weken.", "veelgemaakte_fout": "Denken dat 30 uur weekrust zonder meer mag en de compensatie vergeten, of het tekort verkeerd berekenen.", "bron": "EU 561/2006 (weekrust 45u, verkort 24u, compensatie als blok binnen 3 weken); VERIFICATIE Blok 3"}, {"id": "B3-05", "blok": "blok3_rij_en_rusttijden", "vraag": "Vanaf welke toegestane maximummassa is een tachograaf in beginsel verplicht voor nationaal goederenvervoer?", "opties": {"A": "Boven 3.500 kg", "B": "Boven 2.500 kg", "C": "Boven 7.500 kg", "D": "Boven 12.000 kg"}, "juist": "A", "uitleg": "Voor nationaal goederenvervoer geldt de tachograafplicht in beginsel bij een toegestane maximummassa boven 3.500 kg. De grens van 2.500 kg geldt vanaf 1 juli 2026 alleen voor internationaal vervoer, niet nationaal. De hogere getallen zijn niet de algemene grens.", "examentip": "Houd voor nationaal vervoer de grens van 3.500 kg aan. De 2.500 kg is een aparte, smallere regel voor internationaal vervoer.", "veelgemaakte_fout": "De 2.500 kg-grens, die alleen internationaal en vanaf 1 juli 2026 geldt, toepassen op nationaal vervoer.", "bron": "Rijksoverheid slimme tachograaf (3.500 kg nationaal); VERIFICATIE aanvullende sectie punt 3"}, {"id": "B3-06", "blok": "blok3_rij_en_rusttijden", "vraag": "Vanaf welke datum en vanaf welk gewicht geldt de slimme tachograaf versie 2 bij internationaal goederenvervoer?", "opties": {"A": "Vanaf 1 januari 2026, vanaf 3.500 kg", "B": "Vanaf 1 juli 2026, vanaf 7.500 kg", "C": "Vanaf 1 januari 2025, vanaf 2.500 kg", "D": "Vanaf 1 juli 2026, vanaf 2.500 kg"}, "juist": "D", "uitleg": "Vanaf 1 juli 2026 moeten voertuigen en voertuigcombinaties vanaf 2.500 kg toegestane maximummassa bij internationaal goederenvervoer zijn uitgerust met een slimme tachograaf versie 2. Voor nationaal vervoer blijft de grens 3.500 kg. De andere combinaties van datum en gewicht kloppen niet.", "examentip": "Knoop datum en gewicht aan elkaar: 1 juli 2026 en 2.500 kg, en alleen voor internationaal vervoer.", "veelgemaakte_fout": "De internationale 2.500 kg-grens verwarren met de nationale grens van 3.500 kg, of de datum verkeerd onthouden.", "bron": "Ondernemersplein/Rijksoverheid (smart tacho 2, 2.500 kg, 1-7-2026, internationaal); VERIFICATIE aanvullende sectie punt 3", "twijfel": true}], "blok4_cemt_grenzen": [{"id": "B4-01", "blok": "blok4_cemt_grenzen", "vraag": "Voor welke periode is een CEMT-vergunning geldig?", "opties": {"A": "Voor een kalenderjaar", "B": "Voor een enkele rit", "C": "Voor drie jaar", "D": "Voor vijf jaar"}, "juist": "A", "uitleg": "De CEMT-vergunning is geldig voor een kalenderjaar. Voor een enkele rit naar of door een niet-EU-land bestaat de ritmachtiging. De termijnen van drie of vijf jaar passen niet bij de CEMT.", "examentip": "CEMT is multilateraal en geldt een kalenderjaar. Verwar dat niet met de ritmachtiging voor een enkele rit.", "veelgemaakte_fout": "De CEMT verwarren met de ritmachtiging die voor een enkele rit geldt.", "bron": "NIWO CEMT-pagina (1 kalenderjaar); VERIFICATIE Blok 4"}, {"id": "B4-02", "blok": "blok4_cemt_grenzen", "vraag": "Aan welke voertuigeisen moet een voertuig voldoen om met een Nederlandse CEMT-vergunning te mogen rijden, zoals de NIWO die actueel formuleert?", "opties": {"A": "Aan de Euro1-norm", "B": "Aan de safe-normen: Euro5-safe, EEV-safe of Euro6-safe", "C": "Aan een willekeurige dieselnorm zonder eisen", "D": "Aan de elektrische-aandrijvingsplicht"}, "juist": "B", "uitleg": "De NIWO drukt de CEMT-voertuigeisen uit in de safe-categorieen: het voertuig moet voldoen aan Euro5-safe, EEV-safe of Euro6-safe normen voor geluid, uitstoot en veiligheid. Er is dus geen kale Euro-klasse zoals Euro1, en er geldt geen algemene elektrische plicht. Zonder eisen rijden mag niet.", "examentip": "Onthoud de safe-terminologie: Euro5-safe, EEV-safe en Euro6-safe. De oudere aanduiding EURO V plus is een vereenvoudiging.", "veelgemaakte_fout": "Uitgaan van een kale EURO V-aanduiding terwijl de NIWO de safe-normen hanteert.", "bron": "NIWO CEMT-pagina (voertuigeisen Euro5-safe/EEV-safe/Euro6-safe); VERIFICATIE aanvullende sectie punt 1"}, {"id": "B4-03", "blok": "blok4_cemt_grenzen", "vraag": "Mag de CEMT-vergunning worden gebruikt voor cabotage?", "opties": {"A": "Ja, cabotage is juist het hoofddoel van de CEMT", "B": "Ja, maar alleen binnen de EU", "C": "Nee, de CEMT geldt niet voor cabotage", "D": "Ja, maar alleen buiten de EU"}, "juist": "C", "uitleg": "De CEMT-vergunning geldt niet voor cabotage, dus niet voor binnenlands vervoer binnen een ander land. Ze is bedoeld voor multilateraal grensoverschrijdend vervoer tussen de aangesloten landen. De andere opties kloppen daarom niet.", "examentip": "Onthoud de uitsluiting: CEMT is voor grensoverschrijdend vervoer, niet voor cabotage.", "veelgemaakte_fout": "Aannemen dat de CEMT ook binnenlandse ritten in het buitenland dekt.", "bron": "NIWO CEMT-pagina; VERIFICATIE Blok 4 (CEMT niet voor cabotage)"}, {"id": "B4-04", "blok": "blok4_cemt_grenzen", "vraag": "In hoeveel CEMT-landen mag volgens de drielandenregeling per rit worden beladen?", "opties": {"A": "In maximaal 2 landen", "B": "In onbeperkt veel landen", "C": "In maximaal 4 landen", "D": "In maximaal 3 landen"}, "juist": "D", "uitleg": "Volgens de drielandenregeling mag per rit in maximaal drie CEMT-landen worden beladen. De andere aantallen komen niet overeen met deze regeling.", "examentip": "De naam zegt het al: drielandenregeling betekent beladen in maximaal drie landen per rit.", "veelgemaakte_fout": "Het aantal verwarren met twee of vier landen.", "bron": "VERIFICATIE Blok 4 (drielandenverkeer, max 3 landen per rit)"}, {"id": "B4-05", "blok": "blok4_cemt_grenzen", "vraag": "Welk document is sinds 2026 bij de CEMT-vergunning volledig digitaal in plaats van op papier?", "opties": {"A": "Het groenbladige logboek (rittenboekje)", "B": "Het CMR-vrachtbriefformulier", "C": "Het kentekenbewijs", "D": "Het bestuurdersattest"}, "juist": "A", "uitleg": "Sinds 1 januari 2026 bestaat de CEMT-vergunning uitsluitend digitaal en is ook het bijbehorende groenbladige papieren logboek afgeschaft. In 2026 is het logboek digitaal. De CMR-vrachtbrief, het kentekenbewijs en het bestuurdersattest zijn andere documenten met een eigen regeling.", "examentip": "Koppel de digitalisering aan het CEMT-logboek. Het papieren groenbladige rittenboekje bestaat niet meer.", "veelgemaakte_fout": "Nog uitgaan van het papieren rittenboekje dat altijd in het voertuig moet liggen.", "bron": "NIWO CEMT-pagina (digitaal logboek 2026); VERIFICATIE aanvullende sectie punt 2"}, {"id": "B4-06", "blok": "blok4_cemt_grenzen", "vraag": "Welke documenten kunnen nodig zijn bij vervoer naar een land buiten de EU?", "opties": {"A": "Alleen een eurovergunning", "B": "Douaneformaliteiten zoals T1 of T2, Carnet TIR of een ATA-carnet", "C": "Alleen een CMR-vrachtbrief", "D": "Alleen een vergunningsbewijs"}, "juist": "B", "uitleg": "Bij vervoer naar een land buiten de EU kunnen douaneformaliteiten nodig zijn, zoals de douanevervoerdocumenten T1 of T2, een Carnet TIR of een ATA-carnet. Binnen de EU volstaat het vrij goederenverkeer met de communautaire vergunning en het vergunningsbewijs. Een enkele eurovergunning, vrachtbrief of vergunningsbewijs dekt de douaneformaliteiten niet.", "examentip": "Buiten de EU komt de douane in beeld: T1 of T2, Carnet TIR en ATA-carnet. Binnen de EU is sprake van vrij verkeer.", "veelgemaakte_fout": "Denken dat de eurovergunning alleen genoeg is voor vervoer buiten de EU.", "bron": "BRON Blok 4 en VERIFICATIE Blok 4 (T1/T2, Carnet TIR, ATA-carnet buiten EU)"}, {"id": "B4-07", "blok": "blok4_cemt_grenzen", "vraag": "Welke tolheffing hoort bij Duitsland?", "opties": {"A": "Telepass", "B": "Eurovignet", "C": "Peage", "D": "Maut"}, "juist": "D", "uitleg": "De Maut is de tolheffing in Duitsland. Telepass hoort bij Italie en peage bij Frankrijk. Het eurovignet is een gezamenlijk vignet voor een aantal landen en niet specifiek Duits.", "examentip": "Knoop de tol aan het land: Maut is Duitsland, Telepass is Italie, peage is Frankrijk.", "veelgemaakte_fout": "De tolnamen aan de verkeerde landen koppelen.", "bron": "BRON Blok 4 (tolheffingen: Maut DE, Telepass IT, peage FR)"}]}, "mini_examen": [{"id": "ME01", "blok": "blok1_organisaties", "vraag": "Welke organisatie verleent de eurovergunning voor het beroepsgoederenvervoer?", "opties": {"A": "NIWO", "B": "RDW", "C": "CBR", "D": "KIWA Register"}, "juist": "A", "uitleg": "De NIWO verleent de eurovergunning voor het goederenvervoer. Het CBR neemt de examens af, de RDW gaat over kentekens en KIWA Register doet het personenvervoer.", "examentip": "NIWO is de vaste vergunningverlener voor goederenvervoer.", "veelgemaakte_fout": "KIWA of CBR als vergunningverlener aanwijzen.", "bron": "NIWO productpagina; VERIFICATIE Blok 1"}, {"id": "ME02", "blok": "blok3_rij_en_rusttijden", "vraag": "Wat is de normale maximale dagelijkse rijtijd volgens Verordening (EG) 561/2006?", "opties": {"A": "8 uur", "B": "9 uur", "C": "10 uur", "D": "11 uur"}, "juist": "B", "uitleg": "De normale dagrijtijd is 9 uur, met tweemaal per week een verlenging tot 10 uur als uitzondering.", "examentip": "Standaard 9 uur, uitzondering 10 uur (tweemaal per week).", "veelgemaakte_fout": "10 uur als standaard nemen.", "bron": "EU 561/2006; VERIFICATIE Blok 3"}, {"id": "ME03", "blok": "blok4_cemt_grenzen", "vraag": "Hoeveel landen zijn er volgens de actuele NIWO-lijn voor 2026 aangesloten bij de CEMT?", "opties": {"A": "27 landen", "B": "40 landen", "C": "44 landen", "D": "60 landen"}, "juist": "C", "uitleg": "De NIWO noemt voor 2026 44 aangesloten landen. 27 is het aantal EU-lidstaten en de andere getallen kloppen niet.", "examentip": "Houd 44 aan, niet 27 (dat zijn de EU-lidstaten).", "veelgemaakte_fout": "27 invullen door verwarring met de EU.", "bron": "NIWO CEMT-pagina en FAQ; VERIFICATIE aanvullende sectie punt 4"}, {"id": "ME04", "blok": "blok2_begrippen_overeenkomst", "vraag": "Welke aansprakelijkheidsnorm geldt bij internationaal vervoer onder het CMR-verdrag?", "opties": {"A": "3,40 euro per kilogram", "B": "Onbeperkt", "C": "5,00 euro per kilogram", "D": "8,33 SDR per kilogram"}, "juist": "D", "uitleg": "Onder het CMR-verdrag geldt maximaal 8,33 SDR per kilogram. De 3,40 euro per kilogram hoort bij de binnenlandse AVC 2002.", "examentip": "SDR hoort bij CMR (internationaal), euro per kg bij AVC (binnenland).", "veelgemaakte_fout": "AVC-norm op een internationale rit toepassen.", "bron": "CMR art. 23; VERIFICATIE Blok 2"}, {"id": "ME05", "blok": "blok1_organisaties", "vraag": "Hoeveel deelexamens bij het CBR zijn nodig voor het getuigschrift van vakbekwaamheid?", "opties": {"A": "6", "B": "5", "C": "4", "D": "7"}, "juist": "A", "uitleg": "Het getuigschrift wordt behaald met zes deelexamens binnen vijf jaar.", "examentip": "Zes examens binnen vijf jaar.", "veelgemaakte_fout": "5 invullen door verwarring met de vijfjaarstermijn.", "bron": "CBR getuigschrift; VERIFICATIE Blok 1"}, {"id": "ME06", "blok": "blok3_rij_en_rusttijden", "vraag": "Na hoeveel uur rijden is een pauze van 45 minuten verplicht?", "opties": {"A": "Na 3,5 uur", "B": "Na 4,5 uur", "C": "Na 4 uur", "D": "Na 5,5 uur"}, "juist": "B", "uitleg": "Na uiterlijk 4,5 uur rijden volgt een pauze van 45 minuten, eventueel gesplitst in 15 plus 30 minuten in die volgorde.", "examentip": "4,5 uur rijden, dan 45 minuten pauze.", "veelgemaakte_fout": "De pauze pas na 5 of 5,5 uur plannen.", "bron": "EU 561/2006; VERIFICATIE Blok 3"}, {"id": "ME07", "blok": "blok4_cemt_grenzen", "vraag": "Sinds wanneer bestaat de CEMT-vergunning uitsluitend in digitale vorm?", "opties": {"A": "Sinds 1 januari 2024", "B": "Sinds 1 januari 2025", "C": "Sinds 1 januari 2026", "D": "Sinds 1 juli 2026"}, "juist": "C", "uitleg": "Sinds 1 januari 2026 bestaat de CEMT-vergunning uitsluitend digitaal en is ook het papieren logboek afgeschaft.", "examentip": "Jaargrens 1 januari 2026 voor de volledig digitale CEMT.", "veelgemaakte_fout": "Nog uitgaan van een papieren CEMT of de datum verwarren met 1 juli 2026 (tachograaf).", "bron": "NIWO CEMT-pagina; VERIFICATIE aanvullende sectie punt 2"}, {"id": "ME08", "blok": "blok2_begrippen_overeenkomst", "vraag": "Wat is cabotage?", "opties": {"A": "Doorvoer door een land zonder laden of lossen", "B": "Internationaal vervoer tussen twee EU-landen", "C": "Het vervoeren van eigen goederen voor de eigen onderneming", "D": "Binnenlands vervoer dat een vervoerder uitvoert in een ander land"}, "juist": "D", "uitleg": "Cabotage is binnenlands vervoer dat door een buitenlandse vervoerder in een ander land wordt uitgevoerd. Doorvoer zonder laden of lossen heet transito.", "examentip": "Cabotage = binnenlandse rit in het buitenland.", "veelgemaakte_fout": "Cabotage verwarren met transito.", "bron": "BRON Blok 2"}, {"id": "ME09", "blok": "blok3_rij_en_rusttijden", "vraag": "Wie handhaven de rij- en rusttijden op de weg?", "opties": {"A": "ILT en politie", "B": "NLA en douane", "C": "RDW en CBR", "D": "NIWO en Belastingdienst"}, "juist": "A", "uitleg": "De ILT en de politie handhaven samen de rij- en rusttijden op de weg. De NLA ziet toe op de Arbeidstijdenwet, niet op de rij- en rusttijden op de weg.", "examentip": "Rij- en rusttijden op de weg: altijd ILT plus politie.", "veelgemaakte_fout": "De NLA aanwijzen als handhaver op de weg.", "bron": "VERIFICATIE Blok 1 en afwijkingspunt 4"}, {"id": "ME10", "blok": "blok4_cemt_grenzen", "vraag": "Aan welke voertuignormen moet volgens de NIWO worden voldaan voor de CEMT-vergunning?", "opties": {"A": "Euro1 of hoger", "B": "Euro5-safe, EEV-safe of Euro6-safe", "C": "Een vrije keuze zonder eisen", "D": "Uitsluitend elektrisch"}, "juist": "B", "uitleg": "De NIWO hanteert de safe-normen: Euro5-safe, EEV-safe of Euro6-safe. Er is geen kale Euro1-norm en geen algemene elektrische plicht.", "examentip": "Onthoud de safe-terminologie in plaats van een kale Euro-klasse.", "veelgemaakte_fout": "Een kale EURO V-norm aanhouden zonder de safe-toevoeging.", "bron": "NIWO CEMT-pagina (voertuigeisen); VERIFICATIE aanvullende sectie punt 1"}, {"id": "ME11", "blok": "blok2_begrippen_overeenkomst", "vraag": "Binnen welke termijn verjaart een vordering onder het CMR-verdrag in normale gevallen?", "opties": {"A": "6 maanden", "B": "2 jaar", "C": "1 jaar", "D": "3 jaar"}, "juist": "C", "uitleg": "De verjaringstermijn is normaal een jaar, en drie jaar bij opzet of bewuste roekeloosheid.", "examentip": "Een jaar normaal, drie jaar bij opzet.", "veelgemaakte_fout": "Direct drie jaar invullen.", "bron": "CMR art. 32; VERIFICATIE Blok 2"}, {"id": "ME12", "blok": "blok3_rij_en_rusttijden", "vraag": "Wat is de normale wekelijkse rust volgens Verordening (EG) 561/2006?", "opties": {"A": "Minimaal 24 uur", "B": "Minimaal 36 uur", "C": "Minimaal 56 uur", "D": "Minimaal 45 uur"}, "juist": "D", "uitleg": "De normale weekrust is minimaal 45 uur, verkort tot minimaal 24 uur met compensatie binnen drie weken.", "examentip": "45 uur normaal, 24 uur verkort.", "veelgemaakte_fout": "De verkorte 24 uur als normaal nemen.", "bron": "EU 561/2006; VERIFICATIE Blok 3"}, {"id": "ME13", "blok": "blok4_cemt_grenzen", "vraag": "Voor welke periode geldt een CEMT-vergunning?", "opties": {"A": "Een kalenderjaar", "B": "Een enkele rit", "C": "Twee jaar", "D": "Vijf jaar"}, "juist": "A", "uitleg": "De CEMT-vergunning is geldig voor een kalenderjaar. Voor een enkele rit bestaat de ritmachtiging.", "examentip": "CEMT geldt een kalenderjaar.", "veelgemaakte_fout": "De CEMT verwarren met de ritmachtiging voor een enkele rit.", "bron": "NIWO CEMT-pagina; VERIFICATIE Blok 4"}, {"id": "ME14", "blok": "blok2_begrippen_overeenkomst", "vraag": "Welk document moet aanwezig zijn in elk voertuig dat onder de eurovergunning rijdt?", "opties": {"A": "De originele eurovergunning", "B": "Een gewaarmerkt vergunningsbewijs", "C": "Het getuigschrift van vakbekwaamheid", "D": "De jaarrekening van de onderneming"}, "juist": "B", "uitleg": "In elk voertuig moet een gewaarmerkt vergunningsbewijs aanwezig zijn; de originele eurovergunning blijft bij de onderneming.", "examentip": "Vergunningsbewijs in het voertuig, eurovergunning op kantoor.", "veelgemaakte_fout": "De originele eurovergunning in het voertuig verwachten.", "bron": "BRON Blok 2"}, {"id": "ME15", "blok": "blok3_rij_en_rusttijden", "vraag": "REKENVRAAG. Een bestuurder heeft deze week al twee keer de dagrijtijd tot 10 uur verlengd. Wat is vandaag zijn maximale dagrijtijd?", "opties": {"A": "8 uur", "B": "10 uur", "C": "9 uur", "D": "11 uur"}, "juist": "C", "uitleg": "De twee toegestane verlengingen tot 10 uur zijn deze week op, dus vandaag geldt de normale dagrijtijd van 9 uur.", "examentip": "Tel hoe vaak de 10-uursverlenging al is gebruikt; bij twee keer val je terug op 9 uur.", "veelgemaakte_fout": "Toch 10 uur aanhouden terwijl de verlengingen al gebruikt zijn.", "bron": "EU 561/2006; VERIFICATIE Blok 3"}, {"id": "ME16", "blok": "blok1_organisaties", "vraag": "Welk risicodragend vermogen geldt voor elk volgend voertuig na het eerste bij de eurovergunning?", "opties": {"A": "9.000 euro", "B": "1.000 euro", "C": "3.400 euro", "D": "5.000 euro"}, "juist": "D", "uitleg": "Voor elk volgend voertuig na het eerste geldt 5.000 euro. Voor het eerste voertuig is dat 9.000 euro.", "examentip": "9.000 euro voor het eerste, 5.000 euro per volgend voertuig.", "veelgemaakte_fout": "De bedragen voor eerste en volgende voertuigen omdraaien.", "bron": "NIWO financiele draagkracht; VERIFICATIE Blok 1"}, {"id": "ME17", "blok": "blok4_cemt_grenzen", "vraag": "In hoeveel CEMT-landen mag per rit worden beladen volgens de drielandenregeling?", "opties": {"A": "3", "B": "2", "C": "4", "D": "5"}, "juist": "A", "uitleg": "Volgens de drielandenregeling mag per rit in maximaal drie CEMT-landen worden beladen.", "examentip": "De naam verklapt het antwoord: maximaal drie landen.", "veelgemaakte_fout": "Twee of vier landen invullen.", "bron": "VERIFICATIE Blok 4"}, {"id": "ME18", "blok": "blok2_begrippen_overeenkomst", "vraag": "Binnen welke termijn moet schade volgens de AVC 2002 worden gemeld?", "opties": {"A": "Binnen 14 dagen", "B": "Binnen 7 dagen", "C": "Binnen 30 dagen", "D": "Binnen 1 jaar"}, "juist": "B", "uitleg": "Onder de AVC 2002 moet schade uiterlijk binnen zeven dagen na aflevering worden gemeld.", "examentip": "AVC-schademelding: zeven dagen.", "veelgemaakte_fout": "Een langere termijn aannemen.", "bron": "AVC 2002; VERIFICATIE Blok 2"}, {"id": "ME19", "blok": "blok3_rij_en_rusttijden", "vraag": "Vanaf welke toegestane maximummassa geldt voor nationaal goederenvervoer in beginsel de tachograafplicht?", "opties": {"A": "Boven 2.500 kg", "B": "Boven 5.000 kg", "C": "Boven 3.500 kg", "D": "Boven 7.500 kg"}, "juist": "C", "uitleg": "Voor nationaal goederenvervoer geldt de tachograafplicht in beginsel boven 3.500 kg. De 2.500 kg-grens geldt vanaf 1 juli 2026 alleen internationaal.", "examentip": "Nationaal 3.500 kg, internationaal vanaf 1 juli 2026 al vanaf 2.500 kg.", "veelgemaakte_fout": "De internationale 2.500 kg-grens op nationaal vervoer toepassen.", "bron": "Rijksoverheid slimme tachograaf; VERIFICATIE aanvullende sectie punt 3"}, {"id": "ME20", "blok": "blok4_cemt_grenzen", "vraag": "Welke tolheffing hoort bij Frankrijk?", "opties": {"A": "Maut", "B": "Telepass", "C": "Eurovignet", "D": "Peage"}, "juist": "D", "uitleg": "De peage is de tolheffing in Frankrijk. Maut hoort bij Duitsland en Telepass bij Italie.", "examentip": "Peage is Frankrijk, Maut is Duitsland, Telepass is Italie.", "veelgemaakte_fout": "De tolnamen aan het verkeerde land koppelen.", "bron": "BRON Blok 4 (tolheffingen)"}]};
+
+/* ====== ElevenLabs coach: agent-id wordt later ingevuld ======
+   Zet hieronder de echte ElevenLabs agent-id. Zolang dit de placeholder is
+   blijft de coach netjes uitgeschakeld en crasht de app niet. */
+const COACH_AGENT_ID = "agent_6001kv8dxydfeps8gz7v48fzvkcf";
+const COACH_ENABLED = COACH_AGENT_ID && COACH_AGENT_ID.indexOf("__") !== 0;
+/* tts-proxy met origin-lock, identiek aan de rijschool-demo */
+const COACH_WORKER = "https://tts-proxy.activeteencare.workers.dev";
+
+/* ====== data normaliseren naar engine-formaat ====== */
+const LETTERS = ["A","B","C","D","E","F"];
+function normVraag(q, blok){
+  const keys = Object.keys(q.opties);
+  const opts = keys.map(k=>q.opties[k]);
+  const correct = keys.indexOf(q.juist);
+  return {
+    id:q.id, blok:q.blok||blok, vraag:q.vraag, opties:opts, correct:correct,
+    uitleg:q.uitleg||"", examentip:q.examentip||"", veelgemaakte_fout:q.veelgemaakte_fout||"",
+    bron:q.bron||"", twijfel:!!q.twijfel
+  };
+}
+const BLOKKEN_DEF = [
+  {key:"blok1_organisaties", titel:"Organisaties en NIWO", kort:"Organisaties", desc:"Wie doet wat: NIWO, KIWA, CBR, ILT en de eurovergunning."},
+  {key:"blok2_begrippen_overeenkomst", titel:"Begrippen en vervoersovereenkomst", kort:"Begrippen", desc:"CMR, AVC, aansprakelijkheid, cabotage en de vervoersdocumenten."},
+  {key:"blok3_rij_en_rusttijden", titel:"Rij- en rusttijden", kort:"Rij- en rusttijden", desc:"Verordening 561/2006: rijtijden, pauzes, rust en de tachograaf."},
+  {key:"blok4_cemt_grenzen", titel:"CEMT en grenzen", kort:"CEMT en grenzen", desc:"De CEMT-vergunning, douane, tol en vervoer buiten de EU."}
+];
+const STARTCHECK = (CONTENT.startcheck||[]).map(q=>normVraag(q, q.blok));
+const BLOKKEN = {};
+BLOKKEN_DEF.forEach(b=>{ BLOKKEN[b.key] = (CONTENT.blokken[b.key]||[]).map(q=>normVraag(q, b.key)); });
+/* mini-examen: twijfelvragen niet als afrekenvraag */
+const MINI = (CONTENT.mini_examen||[]).map(q=>normVraag(q, q.blok)).filter(q=>!q.twijfel);
+const BLOKTITEL = {}; BLOKKEN_DEF.forEach(b=>{ BLOKTITEL[b.key]=b.kort; });
+const EXAM_FMT = (CONTENT.examen&&CONTENT.examen.format) || "30 vragen / 60 min / min. 20 goed";
+
+/* ====== state ====== */
+const app = document.getElementById('app');
+const backBtn = document.getElementById('backBtn');
+let stack = [];
+/* voortgang binnen de sessie (in-memory, geen localStorage voor v1) */
+const SESSIE = { startcheck:null, blokken:{}, mini:null };
+
+/* ====== helpers ====== */
+function esc(s){return (s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+/* opties husselen, maar correct-index meeschuiven; uitleg verwijst nooit naar letters */
+function shuffleOpts(q){
+  const order = shuffle(q.opties.map((_,i)=>i));
+  return Object.assign({}, q, {
+    opties: order.map(i=>q.opties[i]),
+    correct: order.indexOf(q.correct)
+  });
+}
+
+/* ====== navigatie ====== */
+function render(){
+  const f=stack[stack.length-1];
+  backBtn.style.display = stack.length>1?'flex':'none';
+  if(coachConv) stopCoach();
+  if(window.EX && EX._iv && f!==examResult){ clearInterval(EX._iv); }
+  app.className=''; void app.offsetWidth; app.classList.add('fade');
+  f(); window.scrollTo(0,0);
+}
+function go(fn){ stack.push(fn); render(); }
+function goBack(){ stack.pop(); render(); }
+function reset(fn){ stack=[fn]; render(); }
+
+/* ====== home ====== */
+function home(){
+  const done = [];
+  if(SESSIE.startcheck) done.push("startcheck");
+  app.innerHTML = `
+  <div class="headerart">${HEADER_SVG}</div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+    <span class="pilltag"><i class="ti ti-flask"></i> Pilot</span>
+    <span style="font-size:12.5px;color:var(--muted);line-height:1.4">Compacte oefenomgeving voor het weekend tussen je training en het examen.</span>
+  </div>
+  <h1 style="font-size:24px;line-height:1.2;margin-bottom:6px">Weekend Exam Booster</h1>
+  <div class="label" style="margin-bottom:16px">Wegvervoer Goederen Deel 1</div>
+
+  <div class="routebox">
+    <div class="step"><div class="d">Vrijdag</div><div class="w">Training met je docent</div></div>
+    <div class="step mid"><div class="d">Weekend</div><div class="w">Gericht oefenen, hier</div></div>
+    <div class="step"><div class="d">Maandag</div><div class="w">Het examen</div></div>
+  </div>
+
+  <div class="formatbar">
+    <div class="fb-item"><div class="n">30</div><div class="l">vragen op het examen</div></div>
+    <div class="fb-item"><div class="n">60</div><div class="l">minuten de tijd</div></div>
+    <div class="fb-item"><div class="n">20</div><div class="l">goed om te slagen</div></div>
+  </div>
+
+  <div class="infonote"><i class="ti ti-device-floppy" style="color:var(--gold)"></i> Je voortgang wordt binnen deze sessie bijgehouden. Begin bij de startcheck of duik direct in een oefenblok.</div>
+
+  <div class="grid2">
+    <button class="tile" onclick="go(startcheckIntro)"><span class="ic"><i class="ti ti-gauge"></i></span><div><div class="tl">Startcheck</div><div class="ts">Snelle nulmeting van 10 vragen over de vier blokken</div></div>${SESSIE.startcheck?`<span class="badge">${SESSIE.startcheck.goed}/${SESSIE.startcheck.total} goed</span>`:''}</button>
+    <button class="tile" onclick="go(blokkenLijst)"><span class="ic"><i class="ti ti-stack-2"></i></span><div><div class="tl">Oefenblokken</div><div class="ts">Vier blokken met directe uitleg per vraag</div></div></button>
+    <button class="tile wide" onclick="go(miniIntro)"><span class="ic"><i class="ti ti-checklist"></i></span><div><div class="tl">Mini-examen</div><div class="ts">${MINI.length} vragen in CBR-stijl met een eindscore tegen de 20/30-grens</div></div>${SESSIE.mini?`<span class="badge">Laatste: ${SESSIE.mini.goed}/${SESSIE.mini.total}</span>`:''}</button>
+  </div>
+
+  ${COACH_ENABLED?`<button class="tile wide" style="margin-top:12px;flex-direction:row;align-items:center;gap:14px" onclick="go(coach)"><span class="ic"><i class="ti ti-microphone"></i></span><div style="flex:1"><div class="tl">Je coach</div><div class="ts">Stel je vraag hardop en krijg uitleg in begrijpelijke taal</div></div><i class="ti ti-chevron-right chev" style="color:var(--dim)"></i></button>`:''}
+
+  <p class="center-note">Gratis pilot van SkillOpsAI. Vragen of de volledige versie? Mail <a href="mailto:info@skillopsai.ai">info@skillopsai.ai</a>.</p>
+  `;
+}
+
+/* ====== gedeelde quiz-engine ====== */
+let Q={};
+function startQuiz(list, titel, opts){
+  opts = opts||{};
+  Q = {
+    list: opts.shuffle===false ? list.slice() : shuffle(list).slice(0, opts.max||list.length),
+    titel, i:0, answered:false, goed:0, fout:[], streak:0,
+    mode: opts.mode||'oefen',           // 'oefen' = feedback per vraag; 'exam' = score aan eind
+    onDone: opts.onDone||null,
+    showFeedback: opts.mode!=='exam'    // mini-examen toont uitleg pas in het eindoverzicht
+  };
+  Q.list = Q.list.map(shuffleOpts);
+  quizStep();
+}
+function quizStep(){
+  const q=Q.list[Q.i];
+  app.innerHTML = `
+   <div class="q-meta"><span>${esc(Q.titel)}</span><span>${Q.i+1} / ${Q.list.length}${Q.mode==='exam'?'':` &middot; ${Q.goed} goed`}</span></div>
+   <div class="qbar"><i style="width:${Q.i/Q.list.length*100}%"></i></div>
+   <div class="qtype">Meerkeuze</div>
+   ${q.twijfel?`<div class="disc"><i class="ti ti-info-circle"></i> Verdiepingsvraag. Dit punt ligt nog niet helemaal vast in de bronnen. Tel het niet zwaar mee, het is bedoeld om over na te denken.</div>`:''}
+   <div class="q-txt">${esc(q.vraag)}</div>
+   <div id="opts">${q.opties.map((o,k)=>`<button class="opt" onclick="answer(${k})"><span class="ltr">${LETTERS[k]}</span>${esc(o)}</button>`).join('')}</div>
+   <div id="fbslot"></div>`;
+}
+function answer(k){
+  if(Q.answered)return; Q.answered=true;
+  const q=Q.list[Q.i], ok=(k===q.correct);
+  if(ok){ Q.goed++; Q.streak++; } else { Q.streak=0; Q.fout.push(q); }
+  document.querySelectorAll('#opts .opt').forEach((el,idx)=>{
+    el.onclick=null; el.classList.add('locked','dimmed');
+    if(idx===q.correct){ el.classList.remove('dimmed'); el.classList.add('good'); }
+    if(idx===k && k!==q.correct){ el.classList.remove('dimmed'); el.classList.add('bad'); }
+  });
+  const last = Q.i>=Q.list.length-1;
+  let html='';
+  if(Q.showFeedback){
+    const streakHtml = (ok && Q.streak>=3) ? `<div style="text-align:center;margin:2px 0 10px;color:var(--good);font-family:Outfit;font-size:13px"><i class="ti ti-flame"></i> ${Q.streak} op rij goed</div>` : '';
+    html = streakHtml + fbBlock(q, ok);
+  }
+  html += `<button class="pbtn" onclick="nextQ()">${last?(Q.mode==='exam'?'Bekijk uitslag':'Klaar'):'Volgende vraag'}</button>`;
+  document.getElementById('fbslot').innerHTML = html;
+  window.scrollTo({top:document.getElementById('fbslot').offsetTop-20,behavior:'smooth'});
+}
+function fbBlock(q, ok){
+  const coachBtn = COACH_ENABLED ? `<button class="coachbtn" onclick="oefenCoach(this, ${JSON.stringify(q.vraag).replace(/"/g,'&quot;')}, ${JSON.stringify(q.uitleg).replace(/"/g,'&quot;')})"><i class="ti ti-microphone"></i> Laat je coach dit uitleggen</button>` : '';
+  return `<div class="fb ${ok?'ok':'no'}">
+    <div class="h"><i class="ti ti-${ok?'circle-check':'alert-circle'}"></i>${ok?'Goed gedaan':'Helaas, hier leer je van'}</div>
+    <div>${esc(q.uitleg)}</div>
+    ${q.examentip?`<div class="sub-h"><i class="ti ti-bulb"></i> Examentip</div><div>${esc(q.examentip)}</div>`:''}
+    ${q.veelgemaakte_fout?`<div class="mistake"><div class="sub-h"><i class="ti ti-alert-triangle"></i> Veelgemaakte fout</div><div>${esc(q.veelgemaakte_fout)}</div></div>`:''}
+    ${coachBtn}
+  </div>`;
+}
+function nextQ(){
+  if(coachConv) stopCoach();
+  if(Q.i<Q.list.length-1){ Q.i++; Q.answered=false; quizStep(); window.scrollTo(0,0); }
+  else { if(Q.onDone) Q.onDone({goed:Q.goed,total:Q.list.length,fout:Q.fout,list:Q.list}); else reset(home); }
+}
+
+/* ====== startcheck ====== */
+function startcheckIntro(){
+  app.innerHTML = `
+   <div class="chap-head"><div class="n"><i class="ti ti-gauge"></i></div><h2>Startcheck</h2>
+     <div class="desc">Tien vragen verdeeld over de vier blokken. Geen examen, gewoon even peilen waar je staat. Na elke vraag zie je meteen de uitleg.</div></div>
+   <button class="pbtn" onclick="startStartcheck()"><i class="ti ti-player-play"></i> Start de nulmeting</button>
+   <button class="pbtn ghost" style="margin-top:10px" onclick="reset(home)">Terug naar start</button>`;
+}
+function startStartcheck(){
+  startQuiz(STARTCHECK, "Startcheck", { mode:'oefen', shuffle:true, onDone:(r)=>{ SESSIE.startcheck=r; startcheckResult(r); } });
+  stack[stack.length-1]=quizStep;   // de quiz wordt het huidige scherm; terug-knop gaat naar de intro eronder
+}
+function startcheckResult(r){
+  reset(home);
+  go(()=>{
+    const perBlok = blokScores(r.list, r.fout);
+    app.innerHTML = `
+     <div class="score"><div class="big"><b>${r.goed}</b> / ${r.total}</div>
+       <div class="sub">Dit is je nulmeting. Hieronder zie je per blok waar je sterk staat en waar nog winst zit.</div></div>
+     ${blokScoreList(perBlok)}
+     <div class="advies">${nulAdvies(perBlok)}</div>
+     <button class="pbtn" onclick="reset(home);go(blokkenLijst)"><i class="ti ti-stack-2"></i> Naar de oefenblokken</button>
+     <button class="pbtn ghost" style="margin-top:10px" onclick="reset(home)">Naar start</button>`;
+  });
+}
+
+/* ====== oefenblokken ====== */
+function blokkenLijst(){
+  app.innerHTML = `<div class="sec-title"><span class="label">Oefenblokken</span><span class="cnt">4 blokken</span></div>
+   <p class="muted" style="font-size:13.5px;line-height:1.6;margin:-4px 0 16px">Oefen per onderwerp. Bij elke vraag krijg je meteen te zien of het goed is, met uitleg, een examentip en de veelgemaakte fout.</p>` +
+   BLOKKEN_DEF.map((b,i)=>{
+     const lijst=BLOKKEN[b.key], s=SESSIE.blokken[b.key];
+     return `<button class="row" onclick="go(()=>blokIntro('${b.key}'))">
+       <span class="idx">${String(i+1).padStart(2,'0')}</span>
+       <span class="ttl">${esc(b.titel)}<div class="meta">${lijst.length} vragen</div></span>
+       ${s?`<span class="meta" style="color:var(--good)">${s.goed}/${s.total}</span>`:''}
+       <i class="ti ti-chevron-right chev"></i></button>`;
+   }).join('') +
+   `<button class="pbtn ghost" style="margin-top:8px" onclick="reset(home)">Terug naar start</button>`;
+}
+function blokIntro(key){
+  const b=BLOKKEN_DEF.find(x=>x.key===key), lijst=BLOKKEN[key];
+  app.innerHTML = `
+   <div class="chap-head"><div class="n">${String(BLOKKEN_DEF.indexOf(b)+1).padStart(2,'0')}</div><h2>${esc(b.titel)}</h2>
+     <div class="desc">${esc(b.desc)}</div></div>
+   <div class="infonote"><i class="ti ti-info-circle" style="color:var(--gold)"></i> ${lijst.length} oefenvragen. Direct feedback met uitleg, examentip en de veelgemaakte fout.</div>
+   <button class="pbtn" onclick="startBlok('${key}')"><i class="ti ti-player-play"></i> Start dit blok</button>
+   <button class="pbtn ghost" style="margin-top:10px" onclick="goBack()">Terug</button>`;
+}
+function startBlok(key){
+  const b=BLOKKEN_DEF.find(x=>x.key===key);
+  startQuiz(BLOKKEN[key], b.titel, { mode:'oefen', shuffle:true, onDone:(r)=>{ SESSIE.blokken[key]=r; blokResult(key,r); } });
+  stack[stack.length-1]=quizStep;
+}
+function blokResult(key, r){
+  go(()=>{
+    const b=BLOKKEN_DEF.find(x=>x.key===key);
+    const pct=Math.round(r.goed/r.total*100);
+    app.innerHTML = `
+     <div class="score"><div class="big"><b>${r.goed}</b> / ${r.total}</div>
+       <div class="verdict ${pct>=70?'pass':'fail'}">${b.titel}</div>
+       <div class="sub">${pct>=70?'Sterk blok. Dit zit goed.':'Nog wat aandacht waard. Loop de uitleg rustig na.'}</div></div>
+     <button class="pbtn" onclick="reset(home);go(blokkenLijst)"><i class="ti ti-stack-2"></i> Volgend blok kiezen</button>
+     <button class="pbtn ghost" style="margin-top:10px" onclick="reset(home)">Naar start</button>`;
+  });
+}
+
+/* ====== mini-examen ====== */
+function miniIntro(){
+  app.innerHTML = `
+   <div class="chap-head"><div class="n"><i class="ti ti-checklist"></i></div><h2>Mini-examen</h2>
+     <div class="desc">${MINI.length} vragen in de stijl van het echte CBR-examen. Je ziet de uitslag en de uitleg pas aan het eind, net als op de examendag.</div></div>
+   <div class="infonote"><i class="ti ti-target" style="color:var(--gold)"></i> Het echte examen heeft 30 vragen en je hebt er 20 goed nodig om te slagen. Dit mini-examen is je generale repetitie. Haal je hier 14 van de ${MINI.length}, dan zit je op koers.</div>
+   <button class="pbtn" onclick="startMini()"><i class="ti ti-player-play"></i> Start het mini-examen</button>
+   <button class="pbtn ghost" style="margin-top:10px" onclick="reset(home)">Terug naar start</button>`;
+}
+function startMini(){
+  startQuiz(MINI, "Mini-examen", { mode:'exam', shuffle:true, onDone:(r)=>{ SESSIE.mini=r; miniResult(r); } });
+  stack[stack.length-1]=quizStep;
+}
+function miniResult(r){
+  reset(home);
+  go(()=>{
+    // schaal de 20/30-grens naar dit aantal vragen
+    const drempel = Math.ceil(20/30*r.total);
+    const pass = r.goed>=drempel;
+    const perBlok = blokScores(r.list, r.fout);
+    app.innerHTML = `
+     <div class="score">
+       <div class="big"><b>${r.goed}</b> / ${r.total}</div>
+       <div class="verdict ${pass?'pass':'fail'}">${pass?'Op koers':'Nog niet op koers'}</div>
+       <div class="sub">${pass
+         ? `Mooi. Omgerekend naar de 20-van-30-grens zou dit ruim voldoende zijn. Loop hieronder na waar je nog punten liet liggen.`
+         : `Je had er ${drempel} nodig om op koers te liggen voor de 20-van-30-grens. Nog ${drempel-r.goed} te gaan. Focus op de blokken hieronder.`}</div>
+     </div>
+     <div class="label" style="margin:6px 2px 12px">Score per blok</div>
+     ${blokScoreList(perBlok)}
+     <div class="advies">${nulAdvies(perBlok)}</div>
+     ${r.fout.length?`<button class="pbtn ghost" onclick="toonFouten(${JSON.stringify(r.fout.map(q=>q.id)).replace(/"/g,'&quot;')})" style="margin-bottom:10px"><i class="ti ti-eye"></i> Bekijk de fout beantwoorde vragen</button>`:''}
+     <button class="pbtn" onclick="reset(home);go(miniIntro)"><i class="ti ti-refresh"></i> Opnieuw</button>
+     <button class="pbtn ghost" style="margin-top:10px" onclick="reset(home)">Naar start</button>`;
+  });
+}
+function toonFouten(ids){
+  const all = STARTCHECK.concat(...BLOKKEN_DEF.map(b=>BLOKKEN[b.key]), MINI);
+  const lijst = ids.map(id=>all.find(q=>q.id===id)).filter(Boolean);
+  go(()=>{
+    app.innerHTML = `<div class="sec-title"><span class="label">Terugkijken</span><span class="cnt">${lijst.length} fout</span></div>` +
+     lijst.map(q=>`<div class="card" style="padding:15px 16px;margin-bottom:12px">
+       <div class="q-txt" style="font-size:15px;margin-bottom:12px">${esc(q.vraag)}</div>
+       <div class="fb ok" style="margin:0">
+         <div class="h"><i class="ti ti-circle-check"></i>${esc(q.opties[q.correct])}</div>
+         <div>${esc(q.uitleg)}</div>
+         ${q.examentip?`<div class="sub-h"><i class="ti ti-bulb"></i> Examentip</div><div>${esc(q.examentip)}</div>`:''}
+       </div></div>`).join('') +
+     `<button class="pbtn ghost" style="margin-top:6px" onclick="goBack()">Terug</button>`;
+  });
+}
+
+/* ====== score-helpers ====== */
+function blokScores(list, fout){
+  const foutIds = new Set(fout.map(q=>q.id));
+  const acc = {};
+  BLOKKEN_DEF.forEach(b=>{ acc[b.key]={goed:0,total:0,titel:b.kort}; });
+  list.forEach(q=>{
+    const k = q.blok; if(!acc[k]) acc[k]={goed:0,total:0,titel:k};
+    acc[k].total++; if(!foutIds.has(q.id)) acc[k].goed++;
+  });
+  return acc;
+}
+function blokScoreList(acc){
+  return BLOKKEN_DEF.filter(b=>acc[b.key]&&acc[b.key].total).map(b=>{
+    const s=acc[b.key], pct=Math.round(s.goed/s.total*100);
+    const col = pct>=80?'var(--good)':pct>=50?'var(--gold)':'var(--bad)';
+    return `<div class="blokrow"><span class="bn">${esc(b.kort)}</span>
+      <span class="barwrap"><i style="width:${pct}%;background:${col}"></i></span>
+      <span class="bs" style="color:${col}">${s.goed}/${s.total}</span></div>`;
+  }).join('');
+}
+function nulAdvies(acc){
+  const zwak = BLOKKEN_DEF.filter(b=>acc[b.key]&&acc[b.key].total).map(b=>{
+    const s=acc[b.key]; return {titel:b.kort, key:b.key, pct:s.goed/s.total};
+  }).sort((a,b)=>a.pct-b.pct);
+  if(!zwak.length) return 'Maak eerst wat vragen, dan zie je hier een gericht advies.';
+  const slecht = zwak.filter(z=>z.pct<0.7);
+  if(!slecht.length) return '<b>Sterk over de hele linie.</b> Je staat er goed voor. Doe het mini-examen nog een keer op tijd, dan weet je zeker dat het blijft hangen.';
+  const namen = slecht.slice(0,2).map(z=>z.titel).join(' en ');
+  return `<b>Geef dit weekend voorrang aan ${namen}.</b> Daar liet je de meeste punten liggen. Oefen het bijbehorende blok nog een keer en laat je coach de lastige vragen uitleggen voor je het mini-examen opnieuw doet.`;
+}
+
+/* ====== ElevenLabs coach (via tts-proxy origin-lock, identiek aan rijschool) ====== */
+let coachConv = null, coachUI = null;
+function coach(){
+  if(!COACH_ENABLED){ reset(home); return; }
+  app.innerHTML = `
+   <div class="card coach-card">
+     <button id="coachMic" onclick="toggleCoach()" class="av" aria-label="Start of stop coach"><i class="ti ti-microphone"></i></button>
+     <h2>Je examencoach</h2>
+     <p id="coachStatus">Tik op de microfoon en stel je vraag, gewoon hardop.</p>
+     <p class="dim" style="font-size:12px;margin-top:10px">De coach legt alleen uit wat in de gecontroleerde lesstof staat. Twijfelt hij, dan zegt hij dat eerlijk.</p>
+   </div>
+   <div class="card" style="padding:16px;margin-top:13px"><div class="label" style="margin-bottom:10px">Probeer bijvoorbeeld</div>
+     ${['Leg het verschil uit tussen NIWO en KIWA','Wanneer geldt het CMR-verdrag en wanneer de AVC?','Hoe zit het met de pauze na 4,5 uur rijden?'].map(s=>`<div class="row" style="cursor:default;margin-bottom:8px"><i class="ti ti-message-2" style="color:var(--gold);font-size:16px"></i><span class="ttl" style="font-size:13.5px">${s}</span></div>`).join('')}</div>
+   <button class="pbtn ghost" style="margin-top:14px" onclick="reset(home)">Terug naar start</button>`;
+  coachUI = (state)=>setCoachUI(state);
+  setCoachUI(coachConv?(coachConv._mode||'listening'):'idle');
+}
+function setCoachUI(state){
+  const mic=document.getElementById('coachMic'), st=document.getElementById('coachStatus');
+  if(!mic||!st) return;
+  const m={
+    idle:['Tik op de microfoon en stel je vraag, gewoon hardop.','ti-microphone','var(--gold)'],
+    connecting:['Verbinden met je coach...','ti-loader-2','var(--gold)'],
+    listening:['Ik luister, stel je vraag.','ti-microphone','var(--good)'],
+    speaking:['Je coach legt uit...','ti-volume','var(--good)'],
+    error:['Microfoon nodig, of verbinding mislukt. Tik om opnieuw te proberen.','ti-microphone','var(--bad)'],
+    stopped:['Gesprek gestopt. Tik om opnieuw te starten.','ti-microphone','var(--gold)']
+  };
+  const [txt,ic,col]=m[state]||m.idle;
+  st.textContent=txt; mic.querySelector('i').className='ti '+ic; mic.style.borderColor=col; mic.style.color=col;
+}
+async function startCoach(opening, ui){
+  if(!COACH_ENABLED){ if(ui)ui('error'); return; }
+  coachUI = ui; ui('connecting');
+  try{
+    const { Conversation } = await import('https://esm.sh/@elevenlabs/client');
+    coachConv = await Conversation.startSession({
+      agentId: COACH_AGENT_ID,
+      connectionType:'webrtc',
+      dynamicVariables:{ opening: opening },
+      onModeChange:({mode})=>{ const s=(mode==='speaking')?'speaking':'listening'; if(coachConv)coachConv._mode=s; if(coachUI)coachUI(s); },
+      onStatusChange:({status})=>{ if(status==='disconnected'){ coachConv=null; if(coachUI)coachUI('stopped'); } },
+      onError:()=>{ coachConv=null; if(coachUI)coachUI('error'); }
+    });
+  }catch(e){ coachConv=null; if(coachUI)coachUI('error'); }
+}
+async function stopCoach(){
+  if(coachConv){ try{ await coachConv.endSession(); }catch(e){} }
+  coachConv=null; if(coachUI) coachUI('stopped');
+}
+function toggleCoach(){
+  if(coachConv){ stopCoach(); return; }
+  const opening = 'Hoi! Ik ben je examencoach voor Wegvervoer 1. Waar wil je het over hebben: de organisaties, de vervoersovereenkomst, de rij- en rusttijden, of de CEMT en grenzen?';
+  startCoach(opening, (state)=>setCoachUI(state));
+}
+function oefenCoach(btn, vraag, uitleg){
+  if(!COACH_ENABLED) return;
+  if(coachConv){ stopCoach(); lesBtnUI(btn,'stopped'); return; }
+  const opening = `${vraag} Het zit zo. ${uitleg} Leg eens in je eigen woorden uit waarom dit het juiste antwoord is.`;
+  startCoach(opening, (state)=>lesBtnUI(btn, state));
+}
+function lesBtnUI(btn, state){
+  if(!btn || !btn.isConnected) return;
+  const active=(state==='listening'||state==='speaking'||state==='connecting');
+  const m={ connecting:['Verbinden...','ti-loader-2'], listening:['Stop de uitleg','ti-player-stop'], speaking:['Stop de uitleg','ti-player-stop'], error:['Mislukt, tik opnieuw','ti-microphone'], stopped:['Laat je coach dit uitleggen','ti-microphone'] };
+  const [txt,ic]=m[state]||['Laat je coach dit uitleggen','ti-microphone'];
+  btn.innerHTML=`<i class="ti ${ic}"></i> ${txt}`;
+  btn.style.borderColor=active?'var(--good)':''; btn.style.color=active?'var(--good)':'';
+}
+
+/* ====== header-illustratie (inline SVG, wegvervoer-motief in huisstijl) ====== */
+const HEADER_SVG = `<svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vrachtwagen op de weg, illustratie">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#23344c"/><stop offset="1" stop-color="#1f2d42"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="150" fill="url(#sky)"/>
+  <g opacity=".5" stroke="#47586e" stroke-width="1">
+    <line x1="0" y1="40" x2="560" y2="40"/><line x1="0" y1="62" x2="560" y2="62"/>
+  </g>
+  <circle cx="470" cy="34" r="14" fill="none" stroke="#d4a520" stroke-width="2" opacity=".7"/>
+  <g opacity=".35" fill="#47586e">
+    <rect x="40" y="20" width="14" height="42"/><rect x="70" y="30" width="20" height="32"/>
+    <rect x="110" y="14" width="16" height="48"/><rect x="430" y="24" width="18" height="38"/>
+  </g>
+  <rect x="0" y="100" width="560" height="50" fill="#23344c"/>
+  <rect x="0" y="96" width="560" height="5" fill="#47586e"/>
+  <g stroke="#d4a520" stroke-width="4" stroke-dasharray="34 26" opacity=".8"><line x1="0" y1="125" x2="560" y2="125"/></g>
+  <g transform="translate(150,52)">
+    <rect x="0" y="20" width="150" height="48" rx="5" fill="#1a8cff"/>
+    <rect x="10" y="28" width="130" height="14" rx="2" fill="#eef1f5" opacity=".18"/>
+    <path d="M150 30 h44 l24 22 v16 h-68 z" fill="#23344c" stroke="#d4a520" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="156" y="36" width="26" height="16" rx="2" fill="#1a8cff" opacity=".55"/>
+    <circle cx="40" cy="72" r="13" fill="#1f2d42" stroke="#eef1f5" stroke-width="4"/>
+    <circle cx="40" cy="72" r="4" fill="#d4a520"/>
+    <circle cx="178" cy="72" r="13" fill="#1f2d42" stroke="#eef1f5" stroke-width="4"/>
+    <circle cx="178" cy="72" r="4" fill="#d4a520"/>
+  </g>
+</svg>`;
+
+/* ====== start ====== */
+reset(home);
+</script>
+</body>
+</html>
