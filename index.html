@@ -147,6 +147,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .lsec .lkop{font-family:'Outfit',sans-serif;font-size:15.5px;font-weight:600;color:var(--text);display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;line-height:1.35}
 .lsec .lkop .dot{color:var(--gold);font-size:8px;margin-top:7px;flex:none}
 .lsec .ltxt{font-size:14px;color:var(--muted);line-height:1.65}
+/* coach-knop onder het theorieblok (conversatiecoach, geen aparte voorlezer) */
+.blokcoachbtn{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--gold);border:1px solid var(--border);border-radius:30px;padding:11px 18px;margin:4px 0 6px;transition:.15s}
+.blokcoachbtn:hover{border-color:var(--gold);background:rgba(212,165,32,.08)}
+.blokcoachbtn i{font-size:16px}
 .leerprogress{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--dim);margin:0 2px 14px}
 .leerprogress .pill{font-family:'Outfit';font-size:11px;letter-spacing:.5px;color:var(--gold);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
 .fade{animation:f .25s ease}
@@ -186,8 +190,6 @@ const LEERSTOF = {"meta": {"naam": "Leerstof Wegvervoer Goederen Deel 1", "doel"
    blijft de coach netjes uitgeschakeld en crasht de app niet. */
 const COACH_AGENT_ID = "agent_6001kv8dxydfeps8gz7v48fzvkcf";
 const COACH_ENABLED = COACH_AGENT_ID && COACH_AGENT_ID.indexOf("__") !== 0;
-/* tts-proxy met origin-lock, identiek aan de rijschool-demo */
-const COACH_WORKER = "https://tts-proxy.activeteencare.workers.dev";
 
 /* ====== data normaliseren naar engine-formaat ====== */
 const LETTERS = ["A","B","C","D","E","F"];
@@ -225,6 +227,7 @@ const SESSIE = { startcheck:null, blokken:{}, mini:null };
 /* ====== helpers ====== */
 function esc(s){return (s==null?'':String(s)).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+
 /* opties husselen, maar correct-index meeschuiven; uitleg verwijst nooit naar letters */
 function shuffleOpts(q){
   const order = shuffle(q.opties.map((_,i)=>i));
@@ -407,6 +410,28 @@ function lsecHtml(ls){
      <div class="ltxt">${esc(s.tekst)}</div>
    </div>`).join('');
 }
+/* coach-knop onder een theorieblok: start de bestaande conversatiecoach met de
+   blok-titel en de sectieteksten als opening. De coach leest het blok voor, legt
+   het uit en de cursist kan hardop doorvragen. Geen aparte tts-proxy meer. */
+function blokCoachBtnHtml(ls){
+  if(!COACH_ENABLED) return '';
+  const secties = (ls.secties||[]).map(s=>`${s.kop}. ${s.tekst}`).join(' ');
+  const opening = `We nemen het blok ${ls.titel} samen door. ${secties} Zal ik iets verder uitleggen, of heb je hier een vraag over?`;
+  return `<button class="blokcoachbtn" onclick="blokCoach(this, ${JSON.stringify(opening).replace(/"/g,'&quot;')})"><i class="ti ti-microphone"></i> Laat je coach dit uitleggen</button>`;
+}
+function blokCoach(btn, opening){
+  if(!COACH_ENABLED) return;
+  if(coachConv){ stopCoach(); blokCoachUI(btn,'stopped'); return; }
+  startCoach(opening, (state)=>blokCoachUI(btn, state));
+}
+function blokCoachUI(btn, state){
+  if(!btn || !btn.isConnected) return;
+  const active=(state==='listening'||state==='speaking'||state==='connecting');
+  const m={ connecting:['Verbinden...','ti-loader-2'], listening:['Stop de uitleg','ti-player-stop'], speaking:['Stop de uitleg','ti-player-stop'], error:['Mislukt, tik opnieuw','ti-microphone'], stopped:['Laat je coach dit uitleggen','ti-microphone'] };
+  const [txt,ic]=m[state]||['Laat je coach dit uitleggen','ti-microphone'];
+  btn.innerHTML=`<i class="ti ${ic}"></i> ${txt}`;
+  btn.style.borderColor=active?'var(--good)':''; btn.style.color=active?'var(--good)':'';
+}
 /* leer-scherm vóór een oefenblok: lezen, dan starten */
 function blokLeren(key){
   const b=BLOKKEN_DEF.find(x=>x.key===key), ls=LEERSTOF[key], lijst=BLOKKEN[key];
@@ -414,7 +439,8 @@ function blokLeren(key){
    <div class="chap-head"><div class="n">${String(BLOKKEN_DEF.indexOf(b)+1).padStart(2,'0')}</div><h2>${esc(ls.titel)}</h2></div>
    <p class="leadin">${esc(ls.intro)}</p>
    ${lsecHtml(ls)}
-   <button class="pbtn" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Start de oefenvragen (${lijst.length})</button>
+   ${blokCoachBtnHtml(ls)}
+   <button class="pbtn" style="margin-top:6px" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Start de oefenvragen (${lijst.length})</button>
    <button class="pbtn ghost" style="margin-top:10px" onclick="goBack()">Terug</button>`;
 }
 /* vanuit het leer-scherm de quiz starten; resultaat keert netjes terug naar de blokkenlijst */
@@ -443,7 +469,8 @@ function blokLezen(key){
    <div class="chap-head"><div class="n">${String(BLOKKEN_DEF.indexOf(b)+1).padStart(2,'0')}</div><h2>${esc(ls.titel)}</h2></div>
    <p class="leadin">${esc(ls.intro)}</p>
    ${lsecHtml(ls)}
-   <button class="pbtn" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Oefen dit blok (${lijst.length} vragen)</button>
+   ${blokCoachBtnHtml(ls)}
+   <button class="pbtn" style="margin-top:6px" onclick="startBlokFromLeren('${key}')"><i class="ti ti-player-play"></i> Oefen dit blok (${lijst.length} vragen)</button>
    <button class="pbtn ghost" style="margin-top:10px" onclick="goBack()">Terug naar de blokken</button>`;
 }
 function startBlok(key){
@@ -547,7 +574,7 @@ function nulAdvies(acc){
   return `<b>Geef dit weekend voorrang aan ${namen}.</b> Daar liet je de meeste punten liggen. Oefen het bijbehorende blok nog een keer en laat je coach de lastige vragen uitleggen voor je het mini-examen opnieuw doet.`;
 }
 
-/* ====== ElevenLabs coach (via tts-proxy origin-lock, identiek aan rijschool) ====== */
+/* ====== ElevenLabs conversatiecoach (WebRTC, identiek aan rijschool) ====== */
 let coachConv = null, coachUI = null;
 function coach(){
   if(!COACH_ENABLED){ reset(home); return; }
